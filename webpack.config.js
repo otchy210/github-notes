@@ -9,10 +9,30 @@ module.exports = {
     },
     module: {
         rules: [
-        {
-            test: /\.ts$/,
-            use: 'ts-loader',
-        },
+            {
+                test: /\.ts$/,
+                use: 'ts-loader',
+            },
+            {
+                test: /\.scss$/,
+                use: [
+                    "style-loader",
+                    {
+                        loader: "css-loader",
+                        options: {
+                            url: false,
+                            sourceMap: true,
+                            importLoaders: 2
+                        }
+                    },
+                    {
+                        loader: "sass-loader",
+                        options: {
+                            sourceMap: true
+                        },
+                    },
+                ],
+            },
         ],
     },
     resolve: {
