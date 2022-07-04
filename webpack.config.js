@@ -20,4 +20,9 @@ module.exports = {
             '.ts', '.js',
         ],
     },
+    devServer: {
+        static: {
+            directory: path.join(__dirname, 'docs')
+        }
+    },
 };
