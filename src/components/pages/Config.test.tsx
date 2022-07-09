@@ -1,10 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { App } from './App';
+import { Config } from './Config';
 
-describe('App', () => {
+describe('Config', () => {
   it('matches snapshot', () => {
-    const { asFragment } = render(<App />);
+    const { asFragment } = render(<Config />);
     expect(asFragment()).toMatchSnapshot();
   });
 });

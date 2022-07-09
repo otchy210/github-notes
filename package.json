@@ -7,6 +7,7 @@
     "watch": "webpack -w",
     "start": "webpack-dev-server",
     "test": "jest",
+    "test:u": "jest -u",
     "format": "prettier --write .",
     "lint": "eslint",
     "lint:fix": "eslint --fix"
@@ -27,6 +28,7 @@
     "@types/jest": "^28.1.4",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
+    "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",
     "css-loader": "^6.7.1",
@@ -49,6 +51,7 @@
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.3.0"
   }
 }
