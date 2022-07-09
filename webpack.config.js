@@ -2,15 +2,15 @@ const path = require('path');
 
 module.exports = {
   mode: 'production',
-  entry: './src/index.ts',
+  entry: './src/app.tsx',
   output: {
     path: path.resolve(__dirname, 'docs'),
-    filename: 'script.js',
+    filename: 'app.js',
   },
   module: {
     rules: [
       {
-        test: /\.ts$/,
+        test: /\.tsx?$/,
         use: 'ts-loader',
       },
       {
@@ -36,11 +36,16 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
   devServer: {
     static: {
       directory: path.join(__dirname, 'docs'),
     },
+  },
+  target: ['web', 'es2020'],
+  performance: {
+    maxEntrypointSize: 1_024_000,
+    maxAssetSize: 1_024_000,
   },
 };
