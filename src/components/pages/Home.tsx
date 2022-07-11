@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
-import { useOctokit } from '../../hooks/useOctokit';
+import { useOctokit } from '../../utils/useOctokit';
 
 export const Home: React.FC = () => {
   useEffect(() => {
-    const auth = prompt('access token?');
-    if (!auth) {
+    const api = useOctokit();
+    if (!api) {
       return;
     }
-    const api = useOctokit(auth);
     api.users.getAuthenticated().then((user) => {
       console.log(user);
     });
