@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "@octokit/rest": "^19.0.3",
+    "@otchy/sim-doc-db": "^0.11.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0"
