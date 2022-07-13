@@ -6,14 +6,7 @@ exports[`Config matches snapshot 1`] = `
     GitHub Personal access token
   </h2>
   <p>
-    You can create new access token on 
-    <a
-      href="https://github.com/settings/tokens"
-      target="_blank"
-    >
-      the GitHub
-    </a>
-    . You need to give "repo" scope to use this tool. The secret will be stored on your browser so no one except you can check the value.
+    The secret will be stored on your browser so no one except you can check the value.
   </p>
   <p>
     <input
