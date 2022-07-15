@@ -1,10 +1,14 @@
 import React from 'react';
 
-export const Header: React.FC = () => {
+type Props = {
+  toggleNavShown: () => void;
+};
+
+export const Header: React.FC<Props> = ({ toggleNavShown }: Props) => {
   return (
     <header>
       <div className="icon-holder">
-        <div className="icon menu">
+        <div className="icon menu" onClick={() => toggleNavShown()}>
           <svg viewBox="0 0 32 32">
             <path fill="#999" stroke="none" d="M 0 18 L 32 18 L 32 14 L 0 14 Z" />
             <path fill="#999" stroke="none" d="M 0 8 L 32 8 L 32 4 L 0 4 Z" />

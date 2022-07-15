@@ -16,6 +16,7 @@ $border-color: #eee;
   display: inline-block;
   width: $icon-size;
   height: $icon-size;
+  cursor: pointer;
 
   &.menu {
     padding: $space-1;
@@ -61,6 +62,17 @@ header {
       }
     }
   }
+}
+
+nav {
+  position: fixed;
+  top: $header-size;
+  width: calc(100vw - 16px);
+  height: calc(100vh - $header-size);
+  border-right: solid 1px $border-color;
+  background-color: $background-color;
+  box-shadow: 4px 16px 16px rgb(0 0 0 / 50%);
+  transition: left 200ms;
 }
 
 main {
