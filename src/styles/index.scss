@@ -1,0 +1,68 @@
+@import './reset.css';
+
+$outline-offset: 5px;
+$space-1: 0.25rem;
+$space-2: $space-1 * 2;
+$space-3: $space-1 * 3;
+$space-4: $space-1 * 4;
+
+$header-size: 3rem;
+$icon-size: $header-size - $space-4;
+
+$background-color: #fff;
+$border-color: #eee;
+
+.icon {
+  display: inline-block;
+  width: $icon-size;
+  height: $icon-size;
+
+  &.menu {
+    padding: $space-1;
+    svg {
+      width: $icon-size - $space-2;
+      height: $icon-size - $space-2;
+    }
+  }
+  &.user {
+    border-radius: 50%;
+    border: solid 1px $border-color;
+    overflow: hidden;
+  }
+}
+
+body {
+  background-color: $background-color;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  width: 100vw;
+  height: $header-size;
+  left: 0;
+  top: 0;
+  border-bottom: solid 1px $border-color;
+  background-color: $background-color;
+  .icon-holder {
+    flex-basis: $header-size;
+    padding: $space-2;
+  }
+  .search {
+    flex-grow: 1;
+    div {
+      display: flex;
+      align-items: center;
+      height: $header-size;
+      input {
+        margin-left: $outline-offset;
+        width: calc(100% - $outline-offset - $outline-offset);
+      }
+    }
+  }
+}
+
+main {
+  margin: calc($header-size + $space-2) $space-2 $space-2 $space-2;
+}
