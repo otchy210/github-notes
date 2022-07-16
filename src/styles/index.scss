@@ -9,6 +9,7 @@ $space-4: $space-1 * 4;
 $header-size: 3rem;
 $icon-size: $header-size - $space-4;
 
+$color: #111;
 $background-color: #fff;
 $border-color: #eee;
 
@@ -58,7 +59,9 @@ header {
       height: $header-size;
       input {
         margin-left: $outline-offset;
+        outline-color: $border-color;
         width: calc(100% - $outline-offset - $outline-offset);
+        color: $color;
       }
     }
   }
@@ -68,13 +71,26 @@ nav {
   position: fixed;
   top: $header-size;
   width: calc(100vw - 16px);
+  max-width: 300px;
   height: calc(100vh - $header-size);
   border-right: solid 1px $border-color;
   background-color: $background-color;
   box-shadow: 4px 16px 16px rgb(0 0 0 / 50%);
   transition: left 200ms;
+  & li {
+    padding: $space-2 $space-4;
+
+    & a {
+      text-decoration: none;
+      color: $color;
+    }
+  }
 }
 
 main {
   margin: calc($header-size + $space-2) $space-2 $space-2 $space-2;
+
+  & p {
+    color: $color;
+  }
 }
