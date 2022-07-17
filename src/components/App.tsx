@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { HashRouter } from 'react-router-dom';
+import { GitHubProvider } from '../providers/GitHubProvider';
 import { Header } from './common/Header';
 import { Nav } from './common/Nav';
 import { Config } from './pages/Config';
@@ -16,15 +17,17 @@ export const App: React.FC = () => {
   };
 
   return (
-    <HashRouter>
-      <Header {...{ toggleNavShown }} />
-      <Nav {...{ navShown, hideNav }} />
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/config" element={<Config />} />
-        </Routes>
-      </main>
-    </HashRouter>
+    <GitHubProvider>
+      <HashRouter>
+        <Header {...{ toggleNavShown }} />
+        <Nav {...{ navShown, hideNav }} />
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/config" element={<Config />} />
+          </Routes>
+        </main>
+      </HashRouter>
+    </GitHubProvider>
   );
 };

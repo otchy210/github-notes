@@ -1,8 +1,8 @@
 import React from 'react';
-import { useAccessToken } from '../../hooks/useAccessToken';
+import { useGitHub } from '../../providers/GitHubProvider';
 
 export const Config: React.FC = () => {
-  const [accessToken, setAccessToken] = useAccessToken();
+  const { accessToken, setAccessToken } = useGitHub();
   return (
     <>
       <h2>GitHub Personal access token</h2>
@@ -11,6 +11,7 @@ export const Config: React.FC = () => {
         <input
           type="password"
           value={accessToken}
+          placeholder="Enter your access token"
           onChange={(e) => {
             setAccessToken(e.target.value);
           }}

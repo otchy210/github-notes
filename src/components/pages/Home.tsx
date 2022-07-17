@@ -1,17 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { useOctokit } from '../../utils/useOctokit';
 
 export const Home: React.FC = () => {
-  useEffect(() => {
-    const api = useOctokit();
-    if (!api) {
-      return;
-    }
-    api.users.getAuthenticated().then((user) => {
-      console.log(user);
-    });
-  }, []);
   return (
     <>
       <h2>GitHub Notes</h2>
