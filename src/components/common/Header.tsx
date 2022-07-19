@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useGitHub } from '../../providers/GitHubProvider';
 
 type Props = {
@@ -35,7 +36,11 @@ export const Header: React.FC<Props> = ({ toggleNavShown }: Props) => {
           </div>
           <div>{user ? user.name || user.id : 'Unknown'} </div>
           <hr />
-          {user ? <div>Logout</div> : <div>Login</div>}
+          <div>
+            <Link to="/config?focus=accessToken" onClick={() => setUserPanelShown(false)} className="text">
+              {user ? 'Logout' : 'Login'}
+            </Link>
+          </div>
         </div>
       ) : null}
     </header>

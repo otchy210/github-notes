@@ -6,14 +6,15 @@ exports[`Config matches snapshot 1`] = `
     GitHub Personal access token
   </h2>
   <p>
-    The secret will be stored on your browser so no one except you can check the value.
+    The secret will be stored in your browser so no one except you can check the value.
   </p>
   <p>
-    <input
-      placeholder="Enter your access token"
-      type="password"
-      value=""
-    />
+    As long as you set the proper access token below, you're logged in.
   </p>
+  <input
+    placeholder="Enter your access token"
+    type="password"
+    value=""
+  />
 </DocumentFragment>
 `;

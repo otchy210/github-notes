@@ -30,6 +30,17 @@ hr {
   width: 100%;
 }
 
+input {
+  margin: $outline-offset;
+  width: calc(100% - $outline-offset - $outline-offset);
+  color: $color;
+}
+
+a.text {
+  text-decoration: none;
+  color: $color;
+}
+
 .icon {
   display: inline-block;
   width: $icon-size;
@@ -71,10 +82,7 @@ header {
       align-items: center;
       height: $header-size;
       input {
-        margin-left: $outline-offset;
         outline-color: $border-color;
-        width: calc(100% - $outline-offset - $outline-offset);
-        color: $color;
       }
     }
   }
@@ -117,11 +125,6 @@ nav {
   transition: left 200ms;
   & li {
     padding: $space-2 $space-4;
-
-    & a {
-      text-decoration: none;
-      color: $color;
-    }
   }
 }
 

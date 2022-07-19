@@ -12,12 +12,12 @@ export const Nav: React.FC<Props> = ({ navShown, hideNav }: Props) => {
     <nav style={{ left }}>
       <ul>
         <li>
-          <Link to="/" onClick={() => hideNav()}>
+          <Link to="/" onClick={() => hideNav()} className="text">
             Home
           </Link>
         </li>
         <li>
-          <Link to="/config" onClick={() => hideNav()}>
+          <Link to="/config" onClick={() => hideNav()} className="text">
             Config
           </Link>
         </li>
