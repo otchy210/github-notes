@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGitHub } from '../../providers/GitHubProvider';
 
 type Props = {
@@ -7,6 +7,10 @@ type Props = {
 
 export const Header: React.FC<Props> = ({ toggleNavShown }: Props) => {
   const { user } = useGitHub();
+  const [userPanelShown, setUserPanelShown] = useState<boolean>(false);
+  const toggleUserPanelShown = () => {
+    setUserPanelShown(!userPanelShown);
+  };
   return (
     <header>
       <div className="icon-holder">
@@ -20,8 +24,20 @@ export const Header: React.FC<Props> = ({ toggleNavShown }: Props) => {
         </div>
       </form>
       <div className="icon-holder">
-        <div className="icon user">{user ? <img src={user.avatarUrl} /> : <img src="/images/user-icon.svg" />}</div>
+        <div className="icon user" onClick={() => toggleUserPanelShown()}>
+          {user ? <img src={user.avatarUrl} /> : <img src="/images/user-icon.svg" />}
+        </div>
       </div>
+      {userPanelShown ? (
+        <div className="user-panel">
+          <div>
+            <div className="avatar">{user ? <img src={user.avatarUrl} /> : <img src="/images/user-icon.svg" />}</div>
+          </div>
+          <div>{user ? user.name || user.id : 'Unknown'} </div>
+          <hr />
+          {user ? <div>Logout</div> : <div>Login</div>}
+        </div>
+      ) : null}
     </header>
   );
 };
