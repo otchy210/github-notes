@@ -1,6 +1,6 @@
 const prefix = 'GitHubNotes-';
 
-export type LocalStorageNames = 'accessToken';
+export type LocalStorageNames = 'accessToken' | 'repository';
 
 type LocalStorage = {
   get: (name: LocalStorageNames, defaultValue?: string) => string;

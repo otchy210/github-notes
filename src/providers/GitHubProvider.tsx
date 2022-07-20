@@ -15,12 +15,17 @@ type GitHubContextValues = {
   accessToken?: string;
   api?: Octokit;
   user?: GitHubUser;
+  repository?: string;
   setAccessToken: (accessToken: string) => void;
+  setRepository: (accessToken: string) => void;
 };
 
 const GitHubContext = createContext<GitHubContextValues>({
   setAccessToken: (accessToken: string) => {
     console.error(`setAccessToken is not yer ready. Following value was not stored: ${accessToken}`);
+  },
+  setRepository: (repository: string) => {
+    console.error(`setRepository is not yer ready. Following value was not stored: ${repository}`);
   },
 });
 
@@ -30,13 +35,19 @@ type Props = {
 
 export const GitHubProvider: React.FC<Props> = ({ children }) => {
   const localStorage = useLocalStorage();
-  const [accessToken, setAccessTokenState] = useState<string>(localStorage.get('accessToken'));
+  const [accessToken, setAccessTokenState] = useState<string>(localStorage.get('accessToken', ''));
+  const [repository, setRepositoryState] = useState<string>(localStorage.get('repository', ''));
   const [api, setApi] = useState<Octokit>();
   const [user, setUser] = useState<GitHubUser>();
 
   const setAccessToken = (accessToken: string) => {
     localStorage.set('accessToken', accessToken);
     setAccessTokenState(accessToken);
+  };
+
+  const setRepository = (repository: string) => {
+    localStorage.set('repository', repository);
+    setRepositoryState(repository);
   };
 
   useEffect(() => {
@@ -62,7 +73,7 @@ export const GitHubProvider: React.FC<Props> = ({ children }) => {
         setUser(undefined);
       });
   }, [api]);
-  return <GitHubContext.Provider value={{ accessToken, api, user, setAccessToken }}>{children}</GitHubContext.Provider>;
+  return <GitHubContext.Provider value={{ accessToken, api, user, repository, setAccessToken, setRepository }}>{children}</GitHubContext.Provider>;
 };
 
 export const useGitHub = (): GitHubContextValues => {

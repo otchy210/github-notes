@@ -25,6 +25,13 @@ body {
   background-color: $background-color;
 }
 
+h2 {
+  margin-top: $space-4;
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
 hr {
   border-top: solid 1px $border-color;
   width: 100%;
