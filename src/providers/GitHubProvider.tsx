@@ -33,12 +33,15 @@ type Props = {
   children: ReactNode;
 };
 
+type RepositoryStatus = 'unknown' | 'empty' | 'invalid' | 'valid';
+
 export const GitHubProvider: React.FC<Props> = ({ children }) => {
   const localStorage = useLocalStorage();
   const [accessToken, setAccessTokenState] = useState<string>(localStorage.get('accessToken', ''));
-  const [repository, setRepositoryState] = useState<string>(localStorage.get('repository', ''));
   const [api, setApi] = useState<Octokit>();
   const [user, setUser] = useState<GitHubUser>();
+  const [repository, setRepositoryState] = useState<string>(localStorage.get('repository', ''));
+  const [repositoryStatus, setRepositoryStatus] = useState<RepositoryStatus>('unknown');
 
   const setAccessToken = (accessToken: string) => {
     localStorage.set('accessToken', accessToken);
@@ -73,6 +76,20 @@ export const GitHubProvider: React.FC<Props> = ({ children }) => {
         setUser(undefined);
       });
   }, [api]);
+
+  useEffect(() => {
+    if (!api || !user) {
+      setRepositoryStatus('unknown');
+      return;
+    }
+    if (!repository) {
+      setRepositoryStatus('empty');
+      return;
+    }
+    api.repos.get({ owner: 'otchy210', repo: 'github-notes' }).then(({ data }) => {
+      console.log(data);
+    });
+  }, [repository, user]);
   return <GitHubContext.Provider value={{ accessToken, api, user, repository, setAccessToken, setRepository }}>{children}</GitHubContext.Provider>;
 };
 
