@@ -3,8 +3,16 @@
 $white: #fff;
 $gray-e: #eee;
 $gray-d: #ddd;
+$gray-9: #999;
 $gray-1: #111;
 $ht-black: rgb(0 0 0 / 50%);
+$red: #900;
+$pink: #f0a;
+$brown: #960;
+$blue: #33a;
+$bg-pink: #fef;
+$bg-blue: #eff;
+$bg-yellow: #ffe;
 
 $outline-offset: 5px;
 $space-1: 0.25rem;
@@ -56,6 +64,11 @@ a.text {
   color: $color;
 }
 
+code {
+  font-size: 1rem;
+  color: $pink;
+}
+
 .icon {
   display: inline-block;
   width: $icon-size;
@@ -74,6 +87,24 @@ a.text {
     border: solid 1px $border-color;
     overflow: hidden;
   }
+}
+
+@mixin bordered-box($color, $bg-color) {
+  color: $color;
+  border: solid 1px $color;
+  background-color: $bg-color;
+  border-radius: $border-radius;
+  margin: $space-1 0;
+  padding: $space-1;
+}
+.info {
+  @include bordered-box($blue, $bg-blue);
+}
+.warn {
+  @include bordered-box($brown, $bg-yellow);
+}
+.error {
+  @include bordered-box($red, $bg-pink);
 }
 
 header {

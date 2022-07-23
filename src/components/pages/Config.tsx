@@ -4,7 +4,7 @@ import { useURLSearchParams } from '../../hooks/useURLSearchParams';
 import { useGitHub } from '../../providers/GitHubProvider';
 
 export const Config: React.FC = () => {
-  const { user, accessToken, repository, setAccessToken, setRepository } = useGitHub();
+  const { user, accessToken, repo, repoStatus, setAccessToken, setRepository } = useGitHub();
   const accessTokenRef = useRef<HTMLInputElement>(null);
   const params = useURLSearchParams();
   const focus = params.get('focus');
@@ -34,25 +34,33 @@ export const Config: React.FC = () => {
         }}
         ref={accessTokenRef}
       />
-      {accessToken && <p>Remove above token to logout.</p>}
+      {accessToken && <p className="info">Remove above token to logout.</p>}
       {user && (
         <>
           <h2>GitHub repository to store your notes</h2>
+          <p>Your notes will be storead in this repository. It's highly recommended to created a dedicated repository for this purpose.</p>
           <p>
-            Your notes will be storead as Markdown documents in this repository. It's highly recommended to created a dedicated repository for this purpose.
-          </p>
-          <p>
-            Your access token configured above has to have a permission to read and write this repository. As long as your access token has proper permission,
-            the repository can be private.
+            Your access token configured above has to have a permission to read and write this repository. It's recommended to make your repository private.
+            Otherwise, anyone can read your notes.
           </p>
           <input
             type="text"
-            value={repository}
-            placeholder={`git@github.com:${user.login}/github-notes-data.git`}
+            value={repo}
+            placeholder={`ex) git@github.com:${user.login}/github-notes-data.git`}
             onChange={(e) => {
               setRepository(e.target.value);
             }}
           />
+          {repoStatus === 'invalid' && (
+            <p className="error">
+              Repository should look like{' '}
+              <code>
+                git@github.com:{'{'}your-login{'}'}/{'{'}your-repo{'}'}.git
+              </code>
+            </p>
+          )}
+          {repoStatus === 'error' && <p className="error">Failed to access the repository.</p>}
+          {repoStatus === 'public' && <p className="warn">The repogitory is public repository. So anyone can read your notes.</p>}
         </>
       )}
     </>
