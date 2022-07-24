@@ -38,10 +38,10 @@ export const Config: React.FC = () => {
       {user && (
         <>
           <h2>GitHub repository to store your notes</h2>
-          <p>Your notes will be storead in this repository. It's highly recommended to created a dedicated repository for this purpose.</p>
+          <p>Your notes will be storead in this repository. It's highly recommended to create a dedicated repository for this purpose.</p>
           <p>
-            Your access token configured above has to have a permission to read and write this repository. It's recommended to make your repository private.
-            Otherwise, anyone can read your notes.
+            Your access token configured above has to have permissions to read and write this repository. Also, it's recommended to make your repository
+            private. Otherwise, anyone can read your notes.
           </p>
           <input
             type="text"
@@ -60,7 +60,7 @@ export const Config: React.FC = () => {
             </p>
           )}
           {repoStatus === 'error' && <p className="error">Failed to access the repository.</p>}
-          {repoStatus === 'public' && <p className="warn">The repogitory is public repository. So anyone can read your notes.</p>}
+          {repoStatus === 'public' && <p className="warn">The repogitory is public. So anyone can read your notes.</p>}
         </>
       )}
     </>
