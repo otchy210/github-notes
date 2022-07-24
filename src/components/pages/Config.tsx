@@ -1,13 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useURLSearchParams } from '../../hooks/useURLSearchParams';
 import { useGitHub } from '../../providers/GitHubProvider';
 
+type RepoStructureStatus = undefined | 'empty' | 'invalid' | 'avaiable' | 'error';
+
 export const Config: React.FC = () => {
-  const { user, accessToken, repo, repoStatus, setAccessToken, setRepository } = useGitHub();
+  const { api, user, accessToken, repoName, repoStatus, repo, setAccessToken, setRepository } = useGitHub();
   const accessTokenRef = useRef<HTMLInputElement>(null);
   const params = useURLSearchParams();
   const focus = params.get('focus');
+  const [repoStructureStatus, setRepoStructureStatus] = useState<RepoStructureStatus>();
+
   const navigate = useNavigate();
   useEffect(() => {
     if (!focus) {
@@ -20,6 +24,49 @@ export const Config: React.FC = () => {
     }
     navigate('/config', { replace: true });
   }, [focus]);
+
+  useEffect(() => {
+    if (!api || !repo) {
+      return;
+    }
+    api.repos
+      .getCommit({ owner: repo.owner, repo: repo.name, ref: repo.defaultBranch })
+      .then(({ data }) => {
+        const commitSha = data.sha;
+        return api.git.getCommit({ owner: repo.owner, repo: repo.name, commit_sha: commitSha });
+      })
+      .then(({ data }) => {
+        const treeSha = data.tree.sha;
+        return api.git.getTree({ owner: repo.owner, repo: repo.name, tree_sha: treeSha });
+      })
+      .then(({ data }) => {
+        console.log(data);
+        const directories = data.tree
+          .filter((item) => {
+            return item.type === 'tree'; // tree == directory
+          })
+          .filter((item) => {
+            return item.path === 'notes' || item.path === 'meta';
+          });
+        switch (directories.length) {
+          case 0:
+            setRepoStructureStatus('empty');
+            break;
+          case 1:
+            setRepoStructureStatus('invalid');
+            break;
+          case 2:
+            setRepoStructureStatus('avaiable');
+            break;
+          default:
+            setRepoStructureStatus('error');
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+        setRepoStructureStatus('error');
+      });
+  }, [repo]);
   return (
     <>
       <h2>GitHub Personal access token</h2>
@@ -45,7 +92,7 @@ export const Config: React.FC = () => {
           </p>
           <input
             type="text"
-            value={repo}
+            value={repoName}
             placeholder={`ex) git@github.com:${user.login}/github-notes-data.git`}
             onChange={(e) => {
               setRepository(e.target.value);
@@ -60,7 +107,14 @@ export const Config: React.FC = () => {
             </p>
           )}
           {repoStatus === 'error' && <p className="error">Failed to access the repository.</p>}
-          {repoStatus === 'public' && <p className="warn">The repogitory is public. So anyone can read your notes.</p>}
+          {repo && !repo.private && <p className="warn">The repogitory is public. So anyone can read your notes.</p>}
+        </>
+      )}
+      {repo && (
+        <>
+          <h2>Initialize repository</h2>
+          <p>repoStructureStatus: {repoStructureStatus}</p>
+          <p className="error">Your repository is not yet initialized. Click following button to initialize it.</p>
         </>
       )}
     </>

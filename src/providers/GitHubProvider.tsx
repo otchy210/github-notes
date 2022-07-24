@@ -11,14 +11,22 @@ type GitHubUser = {
   avatarUrl: string;
 };
 
-type RepoStatus = undefined | 'empty' | 'invalid' | 'public' | 'private' | 'error';
+type RepoStatus = undefined | 'empty' | 'invalid' | 'avaiable' | 'error';
+
+type GitHubRepo = {
+  owner: string;
+  name: string;
+  defaultBranch: string;
+  private: boolean;
+};
 
 type GitHubContextValues = {
   accessToken?: string;
   api?: Octokit;
   user?: GitHubUser;
-  repo?: string;
+  repoName?: string;
   repoStatus?: RepoStatus;
+  repo?: GitHubRepo;
   setAccessToken: (accessToken: string) => void;
   setRepository: (accessToken: string) => void;
 };
@@ -50,8 +58,9 @@ export const GitHubProvider: React.FC<Props> = ({ children }) => {
   const [accessToken, setAccessTokenState] = useState<string>(localStorage.get('accessToken', ''));
   const [api, setApi] = useState<Octokit>();
   const [user, setUser] = useState<GitHubUser>();
-  const [repo, setRepState] = useState<string>(localStorage.get('repository', ''));
+  const [repoName, setRepoName] = useState<string>(localStorage.get('repository', ''));
   const [repoStatus, setRepoStatus] = useState<RepoStatus>();
+  const [repo, setRepo] = useState<GitHubRepo>();
 
   const setAccessToken = (accessToken: string) => {
     localStorage.set('accessToken', accessToken);
@@ -60,7 +69,12 @@ export const GitHubProvider: React.FC<Props> = ({ children }) => {
 
   const setRepository = (repository: string) => {
     localStorage.set('repository', repository);
-    setRepState(repository);
+    setRepoName(repository);
+  };
+
+  const setRepoAndStatus = (repo: GitHubRepo | undefined, repoStatus: RepoStatus | undefined) => {
+    setRepo(repo);
+    setRepoStatus(repoStatus);
   };
 
   useEffect(() => {
@@ -89,33 +103,37 @@ export const GitHubProvider: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     if (!api || !user) {
-      setRepoStatus(undefined);
+      setRepoAndStatus(undefined, undefined);
       return;
     }
-    if (!repo) {
-      setRepoStatus('empty');
+    if (!repoName) {
+      setRepoAndStatus(undefined, 'empty');
       return;
     }
-    const parsedRepoStr = parseRepoStr(repo);
+    const parsedRepoStr = parseRepoStr(repoName);
     if (parsedRepoStr === false) {
-      setRepoStatus('invalid');
+      setRepoAndStatus(undefined, 'invalid');
       return;
     }
     api.repos
       .get(parsedRepoStr)
       .then(({ data }) => {
-        if (data.private) {
-          setRepoStatus('private');
-        } else {
-          setRepoStatus('public');
-        }
+        const repo: GitHubRepo = {
+          owner: data.owner.login,
+          name: data.name,
+          defaultBranch: data.default_branch,
+          private: data.private,
+        };
+        setRepoAndStatus(repo, 'avaiable');
       })
       .catch((e) => {
         console.error(e);
-        setRepoStatus('error');
+        setRepoAndStatus(undefined, 'error');
       });
-  }, [repo, user]);
-  return <GitHubContext.Provider value={{ accessToken, api, user, repo, repoStatus, setAccessToken, setRepository }}>{children}</GitHubContext.Provider>;
+  }, [repoName, user]);
+  return (
+    <GitHubContext.Provider value={{ accessToken, api, user, repoName, repoStatus, repo, setAccessToken, setRepository }}>{children}</GitHubContext.Provider>
+  );
 };
 
 export const useGitHub = (): GitHubContextValues => {
