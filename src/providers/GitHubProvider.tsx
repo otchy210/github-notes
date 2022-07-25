@@ -14,8 +14,10 @@ type GitHubUser = {
 type RepoStatus = undefined | 'empty' | 'invalid' | 'avaiable' | 'error';
 
 type GitHubRepo = {
-  owner: string;
-  name: string;
+  apiParam: {
+    owner: string;
+    repo: string;
+  };
   defaultBranch: string;
   private: boolean;
 };
@@ -119,8 +121,10 @@ export const GitHubProvider: React.FC<Props> = ({ children }) => {
       .get(parsedRepoStr)
       .then(({ data }) => {
         const repo: GitHubRepo = {
-          owner: data.owner.login,
-          name: data.name,
+          apiParam: {
+            owner: data.owner.login,
+            repo: data.name,
+          },
           defaultBranch: data.default_branch,
           private: data.private,
         };

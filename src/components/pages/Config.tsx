@@ -30,17 +30,16 @@ export const Config: React.FC = () => {
       return;
     }
     api.repos
-      .getCommit({ owner: repo.owner, repo: repo.name, ref: repo.defaultBranch })
+      .getCommit({ ...repo.apiParam, ref: repo.defaultBranch })
       .then(({ data }) => {
         const commitSha = data.sha;
-        return api.git.getCommit({ owner: repo.owner, repo: repo.name, commit_sha: commitSha });
+        return api.git.getCommit({ ...repo.apiParam, commit_sha: commitSha });
       })
       .then(({ data }) => {
         const treeSha = data.tree.sha;
-        return api.git.getTree({ owner: repo.owner, repo: repo.name, tree_sha: treeSha });
+        return api.git.getTree({ ...repo.apiParam, tree_sha: treeSha });
       })
       .then(({ data }) => {
-        console.log(data);
         const directories = data.tree
           .filter((item) => {
             return item.type === 'tree'; // tree == directory
