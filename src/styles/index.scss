@@ -59,6 +59,16 @@ input {
   }
 }
 
+button {
+  border-radius: $border-radius;
+  padding: $space-2 $space-4;
+  background-color: $blue;
+  color: $white;
+  &:disabled {
+    opacity: 0.7;
+  }
+}
+
 a.text {
   text-decoration: none;
   color: $color;
@@ -96,6 +106,9 @@ code {
   border-radius: $border-radius;
   margin: $space-1 0;
   padding: $space-1;
+  a {
+    color: $color;
+  }
 }
 .info {
   @include bordered-box($blue, $bg-blue);

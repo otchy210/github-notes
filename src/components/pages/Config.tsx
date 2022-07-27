@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useURLSearchParams } from '../../hooks/useURLSearchParams';
 import { useGitHub } from '../../providers/GitHubProvider';
+import { GitHubClient } from '../../utils/GitHubClient';
 
 type RepoStructureStatus = undefined | 'empty' | 'invalid' | 'avaiable' | 'error';
 
@@ -11,6 +12,7 @@ export const Config: React.FC = () => {
   const params = useURLSearchParams();
   const focus = params.get('focus');
   const [repoStructureStatus, setRepoStructureStatus] = useState<RepoStructureStatus>();
+  const [initializingRepo, setInitializingRepo] = useState<boolean>(false);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -29,16 +31,9 @@ export const Config: React.FC = () => {
     if (!api || !repo) {
       return;
     }
-    api.repos
-      .getCommit({ ...repo.apiParam, ref: repo.defaultBranch })
-      .then(({ data }) => {
-        const commitSha = data.sha;
-        return api.git.getCommit({ ...repo.apiParam, commit_sha: commitSha });
-      })
-      .then(({ data }) => {
-        const treeSha = data.tree.sha;
-        return api.git.getTree({ ...repo.apiParam, tree_sha: treeSha });
-      })
+    const client = new GitHubClient(api, repo);
+    client
+      .getHeadTree()
       .then(({ data }) => {
         const directories = data.tree
           .filter((item) => {
@@ -58,6 +53,7 @@ export const Config: React.FC = () => {
             setRepoStructureStatus('avaiable');
             break;
           default:
+            console.error(`Unknown state: ${data.tree}`);
             setRepoStructureStatus('error');
         }
       })
@@ -66,6 +62,37 @@ export const Config: React.FC = () => {
         setRepoStructureStatus('error');
       });
   }, [repo]);
+
+  const initializeRepo = () => {
+    if (!api || !repo) {
+      return;
+    }
+    const confirmed = window.confirm('Are you sure to initialize the repository? It may override what you have now.');
+    if (!confirmed) {
+      return;
+    }
+    setInitializingRepo(true);
+    const client = new GitHubClient(api, repo);
+    (async () => {
+      const metaReadme = await client.createTextBlob('# DO NOT EDIT THIS FOLDER MANUALLY');
+      const notesReadme = await client.createTextBlob('# DO NOT EDIT THIS FOLDER MANUALLY');
+      client
+        .pushBlobs('Initialize repo', [
+          { blob: metaReadme, path: 'meta/README.md' },
+          { blob: notesReadme, path: 'notes/README.md' },
+        ])
+        .then(() => {
+          setRepoStructureStatus('avaiable');
+        })
+        .catch((e) => {
+          console.error(e);
+          setRepoStructureStatus('error');
+        })
+        .finally(() => {
+          setInitializingRepo(false);
+        });
+    })();
+  };
   return (
     <>
       <h2>GitHub Personal access token</h2>
@@ -112,8 +139,28 @@ export const Config: React.FC = () => {
       {repo && (
         <>
           <h2>Initialize repository</h2>
-          <p>repoStructureStatus: {repoStructureStatus}</p>
-          <p className="error">Your repository is not yet initialized. Click following button to initialize it.</p>
+          <p>Your repository need some folders to store notes and metadata. So you need to initialize your repository before using it.</p>
+          {repoStructureStatus === 'empty' && <p className="warn">Your repository is not yet initialized. Click following button to initialize it.</p>}
+          {repoStructureStatus === 'invalid' && (
+            <p className="error">
+              <a href={repo.htmlUrl} target="_blank">
+                Your repository
+              </a>{' '}
+              has somewhat invalid state. Make sure it's expected then you can click following button to initialize it.
+            </p>
+          )}
+          {repoStructureStatus === 'error' && (
+            <p className="error">
+              <a href={repo.htmlUrl} target="_blank">
+                Your repository
+              </a>{' '}
+              returns error. You may find the hint in the DevTools console. If the repository is just empty, you need to push initial commit first to start
+              using this repository.
+            </p>
+          )}
+          <button onClick={initializeRepo} disabled={initializingRepo}>
+            {initializingRepo ? 'Processing...' : 'Initialize'}
+          </button>
         </>
       )}
     </>

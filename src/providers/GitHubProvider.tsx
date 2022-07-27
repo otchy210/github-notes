@@ -13,13 +13,14 @@ type GitHubUser = {
 
 type RepoStatus = undefined | 'empty' | 'invalid' | 'avaiable' | 'error';
 
-type GitHubRepo = {
+export type GitHubRepo = {
   apiParam: {
     owner: string;
     repo: string;
   };
   defaultBranch: string;
   private: boolean;
+  htmlUrl: string;
 };
 
 type GitHubContextValues = {
@@ -127,6 +128,7 @@ export const GitHubProvider: React.FC<Props> = ({ children }) => {
           },
           defaultBranch: data.default_branch,
           private: data.private,
+          htmlUrl: data.html_url,
         };
         setRepoAndStatus(repo, 'avaiable');
       })
