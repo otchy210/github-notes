@@ -2,12 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useURLSearchParams } from '../../hooks/useURLSearchParams';
 import { useGitHub } from '../../providers/GitHubProvider';
-import { GitHubClient } from '../../utils/GitHubClient';
 
 type RepoStructureStatus = undefined | 'empty' | 'invalid' | 'avaiable' | 'error';
 
 export const Config: React.FC = () => {
-  const { api, user, accessToken, repoName, repoStatus, repo, setAccessToken, setRepository } = useGitHub();
+  const { user, accessToken, repoName, repoStatus, repo, client, setAccessToken, setRepository } = useGitHub();
   const accessTokenRef = useRef<HTMLInputElement>(null);
   const params = useURLSearchParams();
   const focus = params.get('focus');
@@ -28,10 +27,9 @@ export const Config: React.FC = () => {
   }, [focus]);
 
   useEffect(() => {
-    if (!api || !repo) {
+    if (!client) {
       return;
     }
-    const client = new GitHubClient(api, repo);
     client
       .getHeadTree()
       .then(({ data }) => {
@@ -64,7 +62,7 @@ export const Config: React.FC = () => {
   }, [repo]);
 
   const initializeRepo = () => {
-    if (!api || !repo) {
+    if (!client) {
       return;
     }
     const confirmed = window.confirm('Are you sure to initialize the repository? It may override what you have now.');
@@ -72,7 +70,6 @@ export const Config: React.FC = () => {
       return;
     }
     setInitializingRepo(true);
-    const client = new GitHubClient(api, repo);
     (async () => {
       const metaReadme = await client.createTextBlob('# DO NOT EDIT THIS FOLDER MANUALLY');
       const notesReadme = await client.createTextBlob('# DO NOT EDIT THIS FOLDER MANUALLY');
@@ -158,9 +155,13 @@ export const Config: React.FC = () => {
               using this repository.
             </p>
           )}
-          <button onClick={initializeRepo} disabled={initializingRepo}>
-            {initializingRepo ? 'Processing...' : 'Initialize'}
-          </button>
+          {repoStructureStatus === 'avaiable' ? (
+            <p className="info">Your repository is ready to use.</p>
+          ) : (
+            <button onClick={initializeRepo} disabled={initializingRepo}>
+              {initializingRepo ? 'Processing...' : 'Initialize'}
+            </button>
+          )}
         </>
       )}
     </>

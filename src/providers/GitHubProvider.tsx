@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Octokit } from '@octokit/rest';
 import { createContext, ReactNode } from 'react';
 import { useLocalStorage } from '../utils/useLocalStorage';
+import { GitHubClient } from '../utils/GitHubClient';
 
 type GitHubUser = {
   id: number;
@@ -25,11 +26,11 @@ export type GitHubRepo = {
 
 type GitHubContextValues = {
   accessToken?: string;
-  api?: Octokit;
   user?: GitHubUser;
   repoName?: string;
   repoStatus?: RepoStatus;
   repo?: GitHubRepo;
+  client?: GitHubClient;
   setAccessToken: (accessToken: string) => void;
   setRepository: (accessToken: string) => void;
 };
@@ -64,6 +65,7 @@ export const GitHubProvider: React.FC<Props> = ({ children }) => {
   const [repoName, setRepoName] = useState<string>(localStorage.get('repository', ''));
   const [repoStatus, setRepoStatus] = useState<RepoStatus>();
   const [repo, setRepo] = useState<GitHubRepo>();
+  const [client, setClient] = useState<GitHubClient>();
 
   const setAccessToken = (accessToken: string) => {
     localStorage.set('accessToken', accessToken);
@@ -78,6 +80,12 @@ export const GitHubProvider: React.FC<Props> = ({ children }) => {
   const setRepoAndStatus = (repo: GitHubRepo | undefined, repoStatus: RepoStatus | undefined) => {
     setRepo(repo);
     setRepoStatus(repoStatus);
+    if (api !== undefined && repo !== undefined && repoStatus === 'avaiable') {
+      const client = new GitHubClient(api, repo);
+      setClient(client);
+    } else {
+      setClient(undefined);
+    }
   };
 
   useEffect(() => {
@@ -138,7 +146,7 @@ export const GitHubProvider: React.FC<Props> = ({ children }) => {
       });
   }, [repoName, user]);
   return (
-    <GitHubContext.Provider value={{ accessToken, api, user, repoName, repoStatus, repo, setAccessToken, setRepository }}>{children}</GitHubContext.Provider>
+    <GitHubContext.Provider value={{ accessToken, user, repoName, repoStatus, repo, client, setAccessToken, setRepository }}>{children}</GitHubContext.Provider>
   );
 };
 
