@@ -87,7 +87,7 @@ code {
 
   &.menu {
     padding: $space-1;
-    svg {
+    img {
       width: $icon-size - $space-2;
       height: $icon-size - $space-2;
     }
@@ -96,6 +96,9 @@ code {
     border-radius: 50%;
     border: solid 1px $border-color;
     overflow: hidden;
+    img {
+      width: 100%;
+    }
   }
 }
 
@@ -165,6 +168,9 @@ header {
       border-radius: 50%;
       border: solid 1px $border-color;
       overflow: hidden;
+      img {
+        width: 100%;
+      }
     }
   }
 }
