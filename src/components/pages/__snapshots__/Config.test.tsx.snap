@@ -2,19 +2,76 @@
 
 exports[`Config matches snapshot 1`] = `
 <DocumentFragment>
-  <h2>
-    GitHub Personal access token
-  </h2>
-  <p>
-    The secret will be stored in your browser so no one except you can check the value.
-  </p>
-  <p>
-    As long as you set the proper access token below, you're logged in.
-  </p>
-  <input
-    placeholder="Enter your access token"
-    type="password"
-    value=""
-  />
+  <header>
+    <div
+      class="icon-holder"
+    >
+      <div
+        class="icon menu"
+      >
+        <img
+          src="/images/icon-menu.svg"
+        />
+      </div>
+    </div>
+    <form
+      class="search"
+    >
+      <div>
+        <input
+          placeholder="Search notes"
+        />
+      </div>
+    </form>
+    <div
+      class="icon-holder"
+    >
+      <div
+        class="icon user"
+      >
+        <img
+          src="/images/icon-user.svg"
+        />
+      </div>
+    </div>
+  </header>
+  <nav
+    style="left: -100%;"
+  >
+    <ul>
+      <li>
+        <a
+          class="text"
+          href="/"
+        >
+          Home
+        </a>
+      </li>
+      <li>
+        <a
+          class="text"
+          href="/config"
+        >
+          Config
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <main>
+    <h2>
+      GitHub Personal access token
+    </h2>
+    <p>
+      The secret will be stored in your browser so no one except you can check the value.
+    </p>
+    <p>
+      As long as you set the proper access token below, you're logged in.
+    </p>
+    <input
+      placeholder="Enter your access token"
+      type="password"
+      value=""
+    />
+  </main>
 </DocumentFragment>
 `;

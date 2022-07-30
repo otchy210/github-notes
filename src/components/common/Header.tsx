@@ -26,7 +26,7 @@ export const Header: React.FC<Props> = ({ toggleNavShown }: Props) => {
       </form>
       <div className="icon-holder">
         <div className="icon user" onClick={() => toggleUserPanelShown()}>
-          {user ? <img src={user.avatarUrl} /> : <img src="/images/icon-icon.svg" />}
+          {user ? <img src={user.avatarUrl} /> : <img src="/images/icon-user.svg" />}
         </div>
       </div>
       {userPanelShown ? (

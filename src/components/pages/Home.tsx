@@ -1,9 +1,15 @@
 import React from 'react';
 import { useGitHub } from '../../providers/GitHubProvider';
+import { HeaderAndNav } from '../common/HeaderAndNav';
 import { Guide } from './Guide';
 import { List } from './List';
 
 export const Home: React.FC = () => {
   const { client } = useGitHub();
-  return <>{client ? <List /> : <Guide />}</>;
+  return (
+    <>
+      <HeaderAndNav />
+      <main>{client ? <List /> : <Guide />}</main>
+    </>
+  );
 };

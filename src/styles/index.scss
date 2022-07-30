@@ -60,6 +60,12 @@ input {
   }
 }
 
+textarea {
+  color: $color;
+  outline-color: $border-color;
+  line-height: 1.2em;
+}
+
 button {
   border-radius: $border-radius;
   padding: $space-2 $space-4;
@@ -86,6 +92,10 @@ code {
   height: $icon-size;
   cursor: pointer;
 
+  img {
+    width: 100%;
+  }
+
   &.menu {
     padding: $space-1;
     img {
@@ -97,9 +107,6 @@ code {
     border-radius: 50%;
     border: $border;
     overflow: hidden;
-    img {
-      width: 100%;
-    }
   }
 }
 
@@ -203,12 +210,18 @@ main {
     border: $border;
     border-radius: 50%;
     box-shadow: $box-shadow;
-    cursor: pointer;
     img {
       width: 80%;
       margin-left: 10%;
       margin-top: 10%;
       pointer-events: none;
+    }
+  }
+  .editor {
+    textarea {
+      width: 100%;
+      height: calc(100vh - $header-size - $space-4);
+      resize: none;
     }
   }
 }
