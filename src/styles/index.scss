@@ -28,6 +28,7 @@ $icon-size: $header-size - $space-4;
 $color: $gray-1;
 $background-color: $white;
 $border-color: $gray-d;
+$border: solid 1px $border-color;
 
 body {
   color: $color;
@@ -42,7 +43,7 @@ h2 {
 }
 
 hr {
-  border-top: solid 1px $border-color;
+  border-top: $border;
   width: 100%;
 }
 
@@ -94,7 +95,7 @@ code {
   }
   &.user {
     border-radius: 50%;
-    border: solid 1px $border-color;
+    border: $border;
     overflow: hidden;
     img {
       width: 100%;
@@ -131,7 +132,7 @@ header {
   height: $header-size;
   left: 0;
   top: 0;
-  border-bottom: solid 1px $border-color;
+  border-bottom: $border;
   background-color: $background-color;
   .icon-holder {
     flex-basis: $header-size;
@@ -152,7 +153,7 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: solid 1px $border-color;
+    border: $border;
     border-radius: $border-radius;
     background-color: $background-color;
     box-shadow: $box-shadow;
@@ -166,7 +167,7 @@ header {
       width: $icon-size * 2;
       height: $icon-size * 2;
       border-radius: 50%;
-      border: solid 1px $border-color;
+      border: $border;
       overflow: hidden;
       img {
         width: 100%;
@@ -181,7 +182,7 @@ nav {
   width: calc(100vw - 16px);
   max-width: 300px;
   height: calc(100vh - $header-size);
-  border-right: solid 1px $border-color;
+  border-right: $border;
   background-color: $background-color;
   box-shadow: 4px 16px 16px $ht-black;
   transition: left 200ms;
@@ -192,4 +193,22 @@ nav {
 
 main {
   margin: calc($header-size + $space-2) $space-2 $space-2 $space-2;
+  .new-note {
+    position: absolute;
+    right: $space-4;
+    bottom: $space-4;
+    width: 48px;
+    height: 48px;
+    overflow: hidden;
+    border: $border;
+    border-radius: 50%;
+    box-shadow: $box-shadow;
+    cursor: pointer;
+    img {
+      width: 80%;
+      margin-left: 10%;
+      margin-top: 10%;
+      pointer-events: none;
+    }
+  }
 }

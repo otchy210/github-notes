@@ -16,7 +16,7 @@ export const Header: React.FC<Props> = ({ toggleNavShown }: Props) => {
     <header>
       <div className="icon-holder">
         <div className="icon menu" onClick={() => toggleNavShown()}>
-          <img src="/images/menu-icon.svg" />
+          <img src="/images/icon-menu.svg" />
         </div>
       </div>
       <form className="search">
@@ -26,13 +26,13 @@ export const Header: React.FC<Props> = ({ toggleNavShown }: Props) => {
       </form>
       <div className="icon-holder">
         <div className="icon user" onClick={() => toggleUserPanelShown()}>
-          {user ? <img src={user.avatarUrl} /> : <img src="/images/user-icon.svg" />}
+          {user ? <img src={user.avatarUrl} /> : <img src="/images/icon-icon.svg" />}
         </div>
       </div>
       {userPanelShown ? (
         <div className="user-panel">
           <div>
-            <div className="avatar">{user ? <img src={user.avatarUrl} /> : <img src="/images/user-icon.svg" />}</div>
+            <div className="avatar">{user ? <img src={user.avatarUrl} /> : <img src="/images/icon-user.svg" />}</div>
           </div>
           <div>{user ? user.name || user.id : 'Unknown'} </div>
           <hr />

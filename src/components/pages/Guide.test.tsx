@@ -1,11 +1,11 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { Home } from './Home';
+import { Guide } from './Guide';
 import { MemoryRouter } from 'react-router-dom';
 
-describe('Home', () => {
+describe('Guide', () => {
   it('matches snapshot', () => {
-    const { asFragment } = render(<Home />, { wrapper: MemoryRouter });
+    const { asFragment } = render(<Guide />, { wrapper: MemoryRouter });
     expect(asFragment()).toMatchSnapshot();
   });
 });
