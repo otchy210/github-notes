@@ -3,6 +3,30 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useURLSearchParams } from '../../hooks/useURLSearchParams';
 import { useLocalStorage } from '../../utils/useLocalStorage';
 
+const createNewKey = () => {
+  const now = Date.now();
+  const intArr = [];
+  for (let i = 3; i >= 0; i--) {
+    const shift = i * 8;
+    const mask = 0xff << shift;
+    const num = (mask & now) >> shift;
+    intArr.push(num);
+  }
+  const randInt = Math.trunc(Math.random() * 0xffffffffffff);
+  for (let i = 7; i >= 0; i--) {
+    const shift = i * 8;
+    const mask = 0xff << shift;
+    const num = (mask & randInt) >> shift;
+    intArr.push(num);
+  }
+  const uint8Array = new Uint8Array(intArr);
+  return window
+    .btoa(String.fromCharCode.apply(null, Array.from(uint8Array)))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/g, '');
+};
+
 export const Edit: React.FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const params = useURLSearchParams();
@@ -18,7 +42,7 @@ export const Edit: React.FC = () => {
       }
       return;
     }
-    const newKey = 'dummy-key';
+    const newKey = createNewKey();
     navigate(`/edit?key=${newKey}`, { replace: true });
   }, [key]);
 
