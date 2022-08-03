@@ -4,6 +4,7 @@ $white: #fff;
 $gray-e: #eee;
 $gray-d: #ddd;
 $gray-9: #999;
+$gray-4: #444;
 $gray-1: #111;
 $ht-black: rgb(0 0 0 / 50%);
 $red: #900;
@@ -222,6 +223,31 @@ main {
       width: 100%;
       height: calc(100vh - $header-size - $space-4);
       resize: none;
+    }
+  }
+  .list {
+    h2 {
+      border-bottom: $border;
+    }
+    li a {
+      display: block;
+      text-decoration: none;
+      border-bottom: $border;
+      h3,
+      small {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      h3 {
+        color: $color;
+        font-size: 1rem;
+      }
+      small {
+        color: $gray-4;
+        font-size: 0.5rem;
+      }
     }
   }
 }
