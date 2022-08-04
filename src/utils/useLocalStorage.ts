@@ -1,5 +1,6 @@
 const prefix = 'GitHubNotes-';
 const prefixDraft = `${prefix}Draft-`;
+const prefixDraftMeta = `${prefixDraft}Meta-`;
 
 export type LocalStorageNames = 'accessToken' | 'repository';
 
@@ -9,12 +10,16 @@ type Draft = {
   body: string;
 };
 
+type DraftMeta = {
+  updatedAt: number;
+};
+
 type LocalStorage = {
   get: (name: LocalStorageNames, defaultValue?: string) => string;
   set: (name: LocalStorageNames, value: string) => LocalStorage;
   getDraft: (key: string) => string;
   setDraft: (key: string, draft: string) => LocalStorage;
-  listDraft: () => Draft[];
+  listDraft: () => (Draft & DraftMeta)[];
 };
 
 const localStorage: LocalStorage = {
@@ -30,21 +35,28 @@ const localStorage: LocalStorage = {
   },
   setDraft: (key: string, draft: string) => {
     window.localStorage.setItem(`${prefixDraft}${key}`, draft);
+    const meta: DraftMeta = {
+      updatedAt: Date.now(),
+    };
+    window.localStorage.setItem(`${prefixDraftMeta}${key}`, JSON.stringify(meta));
     return localStorage;
   },
-  listDraft: (): Draft[] => {
+  listDraft: (): (Draft & DraftMeta)[] => {
     return Object.entries(window.localStorage)
       .filter(([key]) => {
-        return key.startsWith(prefixDraft);
+        return key.startsWith(prefixDraft) && !key.startsWith(prefixDraftMeta);
       })
-      .sort(([keyLeft], [keyRight]) => {
-        return keyLeft.localeCompare(keyRight) * -1;
-      })
-      .map(([key, draft]) => {
+      .map(([lsKey, draft]) => {
+        const key = lsKey.slice(prefixDraft.length);
         const lines = draft.split('\n');
         const title = lines.length > 0 ? lines[0] : '<empty>';
         const body = lines.length > 1 ? lines.slice(1).join(' ') : '<empty>';
-        return { key: key.slice(prefixDraft.length), title, body };
+        const metaStr = window.localStorage.getItem(`${prefixDraftMeta}${key}`);
+        const meta: DraftMeta = metaStr ? (JSON.parse(metaStr) as DraftMeta) : { updatedAt: 0 };
+        return { key, title, body, ...meta };
+      })
+      .sort((left, right) => {
+        return right.updatedAt - left.updatedAt;
       });
   },
 };
