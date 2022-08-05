@@ -229,24 +229,38 @@ main {
     h2 {
       border-bottom: $border;
     }
-    li a {
-      display: block;
-      text-decoration: none;
+    li {
+      display: flex;
+      justify-content: space-between;
       border-bottom: $border;
-      h3,
-      small {
+      $icon-width: 40px;
+      a {
         display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        text-decoration: none;
+        width: calc(100vw - $space-4 - $icon-width);
+        h3,
+        small {
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        h3 {
+          color: $color;
+          font-size: 1rem;
+        }
+        small {
+          color: $gray-4;
+          font-size: 0.5rem;
+        }
       }
-      h3 {
-        color: $color;
-        font-size: 1rem;
-      }
-      small {
-        color: $gray-4;
-        font-size: 0.5rem;
+      .icon-more {
+        padding: $space-2;
+        width: $icon-width;
+        cursor: pointer;
+        img {
+          display: inline-block;
+        }
       }
     }
   }

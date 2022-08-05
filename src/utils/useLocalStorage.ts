@@ -4,13 +4,13 @@ const prefixDraftMeta = `${prefixDraft}Meta-`;
 
 export type LocalStorageNames = 'accessToken' | 'repository';
 
-type Draft = {
+export type Draft = {
   key: string;
   title: string;
   body: string;
 };
 
-type DraftMeta = {
+export type DraftMeta = {
   updatedAt: number;
 };
 

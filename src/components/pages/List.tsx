@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { formatTime } from '../../utils/formatTime';
 import { useLocalStorage } from '../../utils/useLocalStorage';
+import { ListItem } from '../common/ListItem';
 import { NewNote } from '../common/NewNote';
 
 export const List: React.FC = () => {
@@ -11,19 +10,9 @@ export const List: React.FC = () => {
     <div className="list">
       <h2>Draft</h2>
       <ul>
-        {drafts.map((draft) => {
-          return (
-            <li>
-              <Link to={`/edit?key=${draft.key}`}>
-                <h3>{draft.title}</h3>
-                <small>
-                  {draft.updatedAt ? `${formatTime(draft.updatedAt)} - ` : ''}
-                  {draft.body}
-                </small>
-              </Link>
-            </li>
-          );
-        })}
+        {drafts.map((draft) => (
+          <ListItem draft={draft} />
+        ))}
       </ul>
       <NewNote />
     </div>
