@@ -19,6 +19,7 @@ type LocalStorage = {
   set: (name: LocalStorageNames, value: string) => LocalStorage;
   getDraft: (key: string) => string;
   setDraft: (key: string, draft: string) => LocalStorage;
+  removeDraft: (key: string) => LocalStorage;
   listDraft: () => (Draft & DraftMeta)[];
 };
 
@@ -39,6 +40,11 @@ const localStorage: LocalStorage = {
       updatedAt: Date.now(),
     };
     window.localStorage.setItem(`${prefixDraftMeta}${key}`, JSON.stringify(meta));
+    return localStorage;
+  },
+  removeDraft: (key: string) => {
+    window.localStorage.removeItem(`${prefixDraft}${key}`);
+    window.localStorage.removeItem(`${prefixDraftMeta}${key}`);
     return localStorage;
   },
   listDraft: (): (Draft & DraftMeta)[] => {

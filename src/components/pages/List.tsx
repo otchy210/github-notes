@@ -1,17 +1,21 @@
-import React from 'react';
-import { useLocalStorage } from '../../utils/useLocalStorage';
+import React, { useState } from 'react';
+import { Draft, DraftMeta, useLocalStorage } from '../../utils/useLocalStorage';
 import { ListItem } from '../common/ListItem';
 import { NewNote } from '../common/NewNote';
 
 export const List: React.FC = () => {
   const localStorage = useLocalStorage();
-  const drafts = localStorage.listDraft();
+  const [drafts, setDrafts] = useState<(Draft & DraftMeta)[]>(localStorage.listDraft());
+  const remove = (key: string) => {
+    localStorage.removeDraft(key);
+    setDrafts(localStorage.listDraft());
+  };
   return (
     <div className="list">
       <h2>Draft</h2>
       <ul>
         {drafts.map((draft) => (
-          <ListItem draft={draft} />
+          <ListItem draft={draft} remove={remove} key={draft.key} />
         ))}
       </ul>
       <NewNote />

@@ -234,6 +234,8 @@ main {
       justify-content: space-between;
       border-bottom: $border;
       $icon-width: 40px;
+      margin-left: 0;
+      transition: margin-left 0.2s;
       a {
         display: block;
         text-decoration: none;
@@ -260,6 +262,21 @@ main {
         cursor: pointer;
         img {
           display: inline-block;
+        }
+      }
+      .menu {
+        display: none;
+      }
+
+      &.menu-opened {
+        margin-left: -$icon-width;
+        transition: margin-left 0.2s;
+        .menu {
+          display: block;
+          padding: $space-2;
+          width: $icon-width;
+          cursor: pointer;
+          background-color: $red;
         }
       }
     }
