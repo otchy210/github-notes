@@ -36,10 +36,17 @@ body {
   background-color: $background-color;
 }
 
-h2 {
-  margin-top: $space-4;
-  &:first-child {
-    margin-top: 0;
+.home,
+.config {
+  h2 {
+    margin-top: $space-4;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  code {
+    font-size: 1rem;
+    color: $pink;
   }
 }
 
@@ -80,11 +87,6 @@ button {
 a.text {
   text-decoration: none;
   color: $color;
-}
-
-code {
-  font-size: 1rem;
-  color: $pink;
 }
 
 .icon {
@@ -278,6 +280,32 @@ main {
           cursor: pointer;
           background-color: $red;
         }
+      }
+    }
+  }
+  .view {
+    p,
+    ul {
+      margin: 1rem 0;
+    }
+    li {
+      list-style: disc;
+      margin-left: 1rem;
+    }
+    code {
+      font-size: 1rem;
+      color: $pink;
+      border: $border;
+      border-radius: $border-radius;
+      background-color: $border-color;
+    }
+    pre {
+      border: $border;
+      border-radius: $border-radius;
+      background-color: $border-color;
+      code {
+        color: $color;
+        border: none;
       }
     }
   }

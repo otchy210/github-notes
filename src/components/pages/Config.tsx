@@ -94,7 +94,7 @@ export const Config: React.FC = () => {
   return (
     <>
       <HeaderAndNav />
-      <main>
+      <main className="config">
         <h2>GitHub Personal access token</h2>
         <p>The secret will be stored in your browser so no one except you can check the value.</p>
         <p>As long as you set the proper access token below, you're logged in.</p>

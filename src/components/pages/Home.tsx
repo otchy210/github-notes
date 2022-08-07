@@ -9,7 +9,7 @@ export const Home: React.FC = () => {
   return (
     <>
       <HeaderAndNav />
-      <main>{client ? <List /> : <Guide />}</main>
+      <main className="home">{client ? <List /> : <Guide />}</main>
     </>
   );
 };

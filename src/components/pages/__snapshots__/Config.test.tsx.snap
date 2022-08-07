@@ -57,7 +57,9 @@ exports[`Config matches snapshot 1`] = `
       </li>
     </ul>
   </nav>
-  <main>
+  <main
+    class="config"
+  >
     <h2>
       GitHub Personal access token
     </h2>

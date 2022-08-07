@@ -74,9 +74,11 @@ export const Edit: React.FC = () => {
           </Link>
         </div>
         <div className="icon-holder">
-          <div className="icon">
-            <img src="/images/icon-preview.svg" />
-          </div>
+          <Link to={`/preview?key=${key}`}>
+            <div className="icon">
+              <img src="/images/icon-preview.svg" />
+            </div>
+          </Link>
         </div>
       </header>
       <main>

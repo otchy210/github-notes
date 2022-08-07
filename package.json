@@ -1,6 +1,6 @@
 {
   "name": "@otchy/github-notes",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "description": "Alternative of Apple Notes which stores notes in GitHub",
   "scripts": {
     "build": "webpack",
@@ -26,6 +26,7 @@
     "@jest/types": "^28.1.1",
     "@testing-library/react": "^13.3.0",
     "@types/jest": "^28.1.4",
+    "@types/markdown-it": "^12.2.3",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@types/react-router-dom": "^5.3.3",
@@ -52,6 +53,7 @@
   "dependencies": {
     "@octokit/rest": "^19.0.3",
     "@otchy/sim-doc-db": "^0.11.1",
+    "markdown-it": "^13.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0"
