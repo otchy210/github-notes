@@ -1,11 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useURLSearchParams } from '../../hooks/useURLSearchParams';
+import { useGitHub } from '../../providers/GitHubProvider';
 import { useLocalStorage } from '../../utils/useLocalStorage';
 import { View } from '../common/View';
 
 export const Preview: React.FC = () => {
   const params = useURLSearchParams();
+  const { client } = useGitHub();
   const key = params.get('key');
   if (!key) {
     console.error(`key has to be provided`);
@@ -13,8 +15,16 @@ export const Preview: React.FC = () => {
   }
   const localStorage = useLocalStorage();
   const draft = localStorage.getDraft(key);
-  const save = () => {
-    console.log('SAVE');
+  const navigate = useNavigate();
+  const save = async () => {
+    if (!client) {
+      console.error("Can't access GitHub");
+      return;
+    }
+    const blob = await client.createTextBlob(draft);
+    await client.pushBlobs('Create note', [{ blob, path: `notes/${key}.md` }]);
+    localStorage.removeDraft(key);
+    navigate('/');
   };
   return (
     <>
