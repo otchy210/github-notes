@@ -13,6 +13,9 @@ export const Preview: React.FC = () => {
   }
   const localStorage = useLocalStorage();
   const draft = localStorage.getDraft(key);
+  const save = () => {
+    console.log('SAVE');
+  };
   return (
     <>
       <header>
@@ -22,6 +25,11 @@ export const Preview: React.FC = () => {
               <img src="/images/icon-back.svg" />
             </div>
           </Link>
+        </div>
+        <div className="icon-holder">
+          <div className="icon" onClick={save}>
+            <img src="/images/icon-save.svg" />
+          </div>
         </div>
       </header>
       <main>
