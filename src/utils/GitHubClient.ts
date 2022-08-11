@@ -77,6 +77,28 @@ type BlobResponse = OctokitResponse<
   201
 >;
 
+type NoteResponse = OctokitResponse<
+  {
+    type: string;
+    size: number;
+    name: string;
+    path: string;
+    content?: string | undefined;
+    sha: string;
+    url: string;
+    git_url: string | null;
+    html_url: string | null;
+    download_url: string | null;
+    encoding: string;
+    _links: {
+      git: string;
+      html: string;
+      self: string;
+    };
+  },
+  200
+>;
+
 export class GitHubClient {
   api: Octokit;
   repo: GitHubRepo;
@@ -96,6 +118,33 @@ export class GitHubClient {
     const commit = commitResponse ?? (await this.getHeadCommit());
     const treeSha = commit.data.tree.sha;
     return this.api.git.getTree({ ...this.repo.apiParam, tree_sha: treeSha });
+  }
+  async getNotesTree(headTreeResponse?: TreeResponse): Promise<TreeResponse> {
+    const tree = headTreeResponse ?? (await this.getHeadTree());
+    const metaTreeSha = tree.data.tree
+      .filter(({ path }) => {
+        return path === 'notes';
+      })
+      .map(({ sha }) => sha)[0];
+    return this.api.git.getTree({ ...this.repo.apiParam, tree_sha: metaTreeSha ?? '' });
+  }
+  async getNote(key: string): Promise<NoteResponse> {
+    return this.api.repos.getContent({ ...this.repo.apiParam, path: `notes/${key}.md` }) as Promise<NoteResponse>;
+  }
+  async getNoteContent(key: string): Promise<string> {
+    const note = await this.getNote(key);
+    const { type, encoding, content } = note.data;
+    if (type !== 'file') {
+      throw new Error(`note type is not file: ${type}`);
+    }
+    if (encoding !== 'base64') {
+      throw new Error(`encoding is not base64: ${encoding}`);
+    }
+    if (!content) {
+      throw new Error('no content');
+    }
+    const response = await window.fetch(`data:text/plain;charset=UTF-8;base64,${content}`);
+    return response.text();
   }
   async createTextBlob(content: string): Promise<BlobResponse> {
     return this.api.git.createBlob({ ...this.repo.apiParam, encoding: 'utf-8', content });
