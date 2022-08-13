@@ -77,7 +77,7 @@ type BlobResponse = OctokitResponse<
   201
 >;
 
-type NoteResponse = OctokitResponse<
+type TextFileResponse = OctokitResponse<
   {
     type: string;
     size: number;
@@ -98,6 +98,15 @@ type NoteResponse = OctokitResponse<
   },
   200
 >;
+
+type NoteMeta = {
+  updatedAt: number;
+};
+
+type Note = NoteMeta & {
+  key: string;
+  content: string;
+};
 
 export class GitHubClient {
   api: Octokit;
@@ -128,24 +137,6 @@ export class GitHubClient {
       .map(({ sha }) => sha)[0];
     return this.api.git.getTree({ ...this.repo.apiParam, tree_sha: metaTreeSha ?? '' });
   }
-  async getNote(key: string): Promise<NoteResponse> {
-    return this.api.repos.getContent({ ...this.repo.apiParam, path: `notes/${key}.md` }) as Promise<NoteResponse>;
-  }
-  async getNoteContent(key: string): Promise<string> {
-    const note = await this.getNote(key);
-    const { type, encoding, content } = note.data;
-    if (type !== 'file') {
-      throw new Error(`note type is not file: ${type}`);
-    }
-    if (encoding !== 'base64') {
-      throw new Error(`encoding is not base64: ${encoding}`);
-    }
-    if (!content) {
-      throw new Error('no content');
-    }
-    const response = await window.fetch(`data:text/plain;charset=UTF-8;base64,${content}`);
-    return response.text();
-  }
   async createTextBlob(content: string): Promise<BlobResponse> {
     return this.api.git.createBlob({ ...this.repo.apiParam, encoding: 'utf-8', content });
   }
@@ -162,5 +153,60 @@ export class GitHubClient {
     });
     const newCommit = await this.api.git.createCommit({ ...this.repo.apiParam, message, parents: [commitSha], tree: newTree.data.sha });
     return this.api.git.updateRef({ ...this.repo.apiParam, ref: `heads/${this.repo.defaultBranch}`, sha: newCommit.data.sha });
+  }
+  private async getNoteContentResponse(key: string): Promise<TextFileResponse> {
+    return this.api.repos.getContent({ ...this.repo.apiParam, path: `notes/${key}.md` }) as Promise<TextFileResponse>;
+  }
+  private async getNoteMetaResponse(key: string): Promise<TextFileResponse> {
+    return this.api.repos.getContent({ ...this.repo.apiParam, path: `meta/${key}.json` }) as Promise<TextFileResponse>;
+  }
+  private async getTextContent(file: TextFileResponse): Promise<string> {
+    const { type, encoding, content } = file.data;
+    if (type !== 'file') {
+      throw new Error(`note type is not file: ${type}`);
+    }
+    if (encoding !== 'base64') {
+      throw new Error(`encoding is not base64: ${encoding}`);
+    }
+    if (!content) {
+      throw new Error('no content');
+    }
+    const response = await window.fetch(`data:text/plain;charset=UTF-8;base64,${content}`);
+    return response.text();
+  }
+  private async getNoteContent(key: string): Promise<string> {
+    const file = await this.getNoteContentResponse(key);
+    return await this.getTextContent(file);
+  }
+  private async getNoteMeta(key: string): Promise<NoteMeta> {
+    const file = await this.getNoteMetaResponse(key);
+    const jsonText = await this.getTextContent(file);
+    return JSON.parse(jsonText) as NoteMeta;
+  }
+  async getNote(key: string): Promise<Note> {
+    const content = await this.getNoteContent(key);
+    const meta = await this.getNoteMeta(key);
+    return {
+      key,
+      content,
+      ...meta,
+    };
+  }
+  async pushNote(key: string, content: string): Promise<Note> {
+    const contentBlob = await this.createTextBlob(content);
+    const meta: NoteMeta = {
+      updatedAt: Date.now(),
+    };
+    const metaJson = JSON.stringify(meta);
+    const metaBlob = await this.createTextBlob(metaJson);
+    await this.pushBlobs('Save note', [
+      { blob: metaBlob, path: `meta/${key}.json` },
+      { blob: contentBlob, path: `notes/${key}.md` },
+    ]);
+    return {
+      key,
+      content,
+      ...meta,
+    };
   }
 }

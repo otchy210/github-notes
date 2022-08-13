@@ -21,8 +21,7 @@ export const Preview: React.FC = () => {
       console.error("Can't access GitHub");
       return;
     }
-    const blob = await client.createTextBlob(draft);
-    await client.pushBlobs('Create note', [{ blob, path: `notes/${key}.md` }]);
+    await client.pushNote(key, draft);
     localStorage.removeDraft(key);
     navigate('/');
   };
