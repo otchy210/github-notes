@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useURLSearchParams } from '../../hooks/useURLSearchParams';
 import { useGitHub } from '../../providers/GitHubProvider';
@@ -6,6 +6,7 @@ import { useLocalStorage } from '../../utils/useLocalStorage';
 import { View } from '../common/View';
 
 export const Preview: React.FC = () => {
+  const [saving, setSaving] = useState<boolean>(false);
   const params = useURLSearchParams();
   const { client } = useGitHub();
   const key = params.get('key');
@@ -21,8 +22,10 @@ export const Preview: React.FC = () => {
       console.error("Can't access GitHub");
       return;
     }
+    setSaving(true);
     await client.pushNote(key, draft);
     localStorage.removeDraft(key);
+    setSaving(false);
     navigate('/');
   };
   return (
@@ -36,9 +39,15 @@ export const Preview: React.FC = () => {
           </Link>
         </div>
         <div className="icon-holder">
-          <div className="icon" onClick={save}>
-            <img src="/images/icon-save.svg" />
-          </div>
+          {saving ? (
+            <div className="icon loading">
+              <img src="/images/icon-circle.svg" />
+            </div>
+          ) : (
+            <div className="icon" onClick={save}>
+              <img src="/images/icon-save.svg" />
+            </div>
+          )}
         </div>
       </header>
       <main>
