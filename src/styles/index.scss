@@ -1,40 +1,7 @@
-@import './reset.css';
+@import './reset.scss';
+//@import './reset.css';
 
-$white: #fff;
-$gray-e: #eee;
-$gray-d: #ddd;
-$gray-9: #999;
-$gray-4: #444;
-$gray-1: #111;
-$ht-black: rgb(0 0 0 / 50%);
-$red: #900;
-$pink: #f0a;
-$brown: #960;
-$blue: #33a;
-$bg-pink: #fef;
-$bg-blue: #eff;
-$bg-yellow: #ffe;
-
-$outline-offset: 5px;
-$space-1: 0.25rem;
-$space-2: $space-1 * 2;
-$space-3: $space-1 * 3;
-$space-4: $space-1 * 4;
-$border-radius: $space-1;
-$box-shadow: 0 0 8px $ht-black;
-
-$header-size: 3rem;
-$icon-size: $header-size - $space-4;
-
-$color: $gray-1;
-$background-color: $white;
-$border-color: $gray-d;
-$border: solid 1px $border-color;
-
-body {
-  color: $color;
-  background-color: $background-color;
-}
+@import './variables.scss';
 
 .home,
 .config {
@@ -47,40 +14,6 @@ body {
   code {
     font-size: 1rem;
     color: $pink;
-  }
-}
-
-hr {
-  border-top: $border;
-  width: 100%;
-}
-
-input {
-  margin: $outline-offset;
-  width: calc(100% - $outline-offset - $outline-offset);
-  color: $color;
-  outline-color: $border-color;
-  border-style: solid;
-  border-width: 1px;
-  border-color: transparent transparent $border-color transparent;
-  &:where(:not(:active)):focus-visible {
-    border-color: transparent;
-  }
-}
-
-textarea {
-  color: $color;
-  outline-color: $border-color;
-  line-height: 1.2em;
-}
-
-button {
-  border-radius: $border-radius;
-  padding: $space-2 $space-4;
-  background-color: $blue;
-  color: $white;
-  &:disabled {
-    opacity: 0.7;
   }
 }
 
@@ -196,8 +129,19 @@ nav {
   background-color: $background-color;
   box-shadow: 4px 16px 16px $ht-black;
   transition: left 200ms;
+  & ul {
+    margin: 0;
+  }
   & li {
-    padding: $space-2 $space-4;
+    margin: 0;
+    padding: 0;
+    & > a {
+      display: block;
+      padding: $space-2 $space-4;
+      &:hover {
+        background-color: $bg-blue;
+      }
+    }
   }
 }
 
@@ -222,7 +166,6 @@ main {
   }
   .editor {
     textarea {
-      width: 100%;
       height: calc(100vh - $header-size - $space-4);
       resize: none;
     }
@@ -230,6 +173,9 @@ main {
   .list {
     h2 {
       border-bottom: $border;
+    }
+    ul {
+      margin: 0;
     }
     li {
       display: flex;
@@ -280,32 +226,6 @@ main {
           cursor: pointer;
           background-color: $red;
         }
-      }
-    }
-  }
-  .view {
-    p,
-    ul {
-      margin: 1rem 0;
-    }
-    li {
-      list-style: disc;
-      margin-left: 1rem;
-    }
-    code {
-      font-size: 1rem;
-      color: $pink;
-      border: $border;
-      border-radius: $border-radius;
-      background-color: $border-color;
-    }
-    pre {
-      border: $border;
-      border-radius: $border-radius;
-      background-color: $border-color;
-      code {
-        color: $color;
-        border: none;
       }
     }
   }
