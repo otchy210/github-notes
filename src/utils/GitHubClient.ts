@@ -1,5 +1,7 @@
 import { Octokit } from '@octokit/rest';
 import { OctokitResponse } from '@octokit/types';
+import { Collection } from '@otchy/sim-doc-db';
+import { Json } from '@otchy/sim-doc-db/dist/types';
 import { GitHubRepo } from '../providers/GitHubProvider';
 
 type RefResponse = OctokitResponse<
@@ -154,13 +156,8 @@ export class GitHubClient {
     const newCommit = await this.api.git.createCommit({ ...this.repo.apiParam, message, parents: [commitSha], tree: newTree.data.sha });
     return this.api.git.updateRef({ ...this.repo.apiParam, ref: `heads/${this.repo.defaultBranch}`, sha: newCommit.data.sha });
   }
-  private async getNoteContentResponse(key: string): Promise<TextFileResponse> {
-    return this.api.repos.getContent({ ...this.repo.apiParam, path: `notes/${key}.md` }) as Promise<TextFileResponse>;
-  }
-  private async getNoteMetaResponse(key: string): Promise<TextFileResponse> {
-    return this.api.repos.getContent({ ...this.repo.apiParam, path: `meta/${key}.json` }) as Promise<TextFileResponse>;
-  }
-  private async getTextContent(file: TextFileResponse): Promise<string> {
+  private async getTextContent(path: string): Promise<string> {
+    const file = (await this.api.repos.getContent({ ...this.repo.apiParam, path })) as TextFileResponse;
     const { type, encoding, content } = file.data;
     if (type !== 'file') {
       throw new Error(`note type is not file: ${type}`);
@@ -175,12 +172,10 @@ export class GitHubClient {
     return response.text();
   }
   private async getNoteContent(key: string): Promise<string> {
-    const file = await this.getNoteContentResponse(key);
-    return await this.getTextContent(file);
+    return this.getTextContent(`notes/${key}.md`);
   }
   private async getNoteMeta(key: string): Promise<NoteMeta> {
-    const file = await this.getNoteMetaResponse(key);
-    const jsonText = await this.getTextContent(file);
+    const jsonText = await this.getTextContent(`meta/${key}.json`);
     return JSON.parse(jsonText) as NoteMeta;
   }
   async getNote(key: string): Promise<Note> {
@@ -208,5 +203,9 @@ export class GitHubClient {
       content,
       ...meta,
     };
+  }
+  async getDb(): Promise<Json> {
+    const jsonText = await this.getTextContent('meta/database.json');
+    return JSON.parse(jsonText) as Json;
   }
 }

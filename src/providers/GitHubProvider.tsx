@@ -4,6 +4,15 @@ import { createContext, ReactNode } from 'react';
 import { useLocalStorage } from '../utils/useLocalStorage';
 import { GitHubClient } from '../utils/GitHubClient';
 
+const REPO_STR = /git@github\.com:([^/]+)\/([^.]+)\.git/;
+const parseRepoStr = (repo: string) => {
+  const results = REPO_STR.exec(repo);
+  if (!results) {
+    return false;
+  }
+  return { owner: results[1], repo: results[2] };
+};
+
 type GitHubUser = {
   id: number;
   login: string;
@@ -46,15 +55,6 @@ const GitHubContext = createContext<GitHubContextValues>({
 
 type Props = {
   children: ReactNode;
-};
-
-const REPO_STR = /git@github\.com:([^/]+)\/([^.]+)\.git/;
-const parseRepoStr = (repo: string) => {
-  const results = REPO_STR.exec(repo);
-  if (!results) {
-    return false;
-  }
-  return { owner: results[1], repo: results[2] };
 };
 
 export const GitHubProvider: React.FC<Props> = ({ children }) => {
