@@ -1,28 +1,9 @@
-import { Collection } from '@otchy/sim-doc-db';
-import { Field } from '@otchy/sim-doc-db/dist/types';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { DatabaseClient } from '../utils/DatabaseClient';
 import { useGitHub } from './GitHubProvider';
 
-const dbSchema: Field[] = [
-  {
-    name: 'key',
-    type: 'tag',
-    indexed: true,
-  },
-  {
-    name: 'content',
-    type: 'string',
-    indexed: true,
-  },
-  {
-    name: 'updatedAt',
-    type: 'number',
-    indexed: false,
-  },
-];
-
 type DatabaseContextValues = {
-  collection?: Collection;
+  client?: DatabaseClient;
 };
 
 const DatabaseContext = createContext<DatabaseContextValues>({});
@@ -32,36 +13,34 @@ type Props = {
 };
 
 export const DatabaseProvider: React.FC<Props> = ({ children }) => {
-  const [collection, setCollection] = useState<Collection>();
-  const { client } = useGitHub();
+  const [client, setClient] = useState<DatabaseClient>();
+  const { client: git } = useGitHub();
   useEffect(() => {
-    const newCollection = new Collection(dbSchema);
-    if (!client) {
-      setCollection(newCollection);
+    const client = new DatabaseClient();
+    if (!git) {
+      setClient(client);
       return;
     }
-    client
+    git
       .getDb()
       .then((db) => {
-        newCollection.import(db);
-        setCollection(newCollection);
+        client.import(db);
+        setClient(client);
       })
       .catch((e) => {
         console.warn(e);
         // TODO: load actual data
         for (let i = 1; i <= 3; i++) {
-          newCollection.add({
-            values: {
-              key: `key${i}`,
-              content: `dummy content ${i}`,
-              updatedAt: i,
-            },
+          client.add({
+            key: `key${i}`,
+            content: `dummy content ${i}`,
+            updatedAt: i,
           });
         }
-        setCollection(newCollection);
+        setClient(client);
       });
-  }, [client]);
-  return <DatabaseContext.Provider value={{ collection }}>{children}</DatabaseContext.Provider>;
+  }, [git]);
+  return <DatabaseContext.Provider value={{ client }}>{children}</DatabaseContext.Provider>;
 };
 
 export const useDatabase = (): DatabaseContextValues => {

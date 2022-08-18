@@ -3,6 +3,7 @@ import { OctokitResponse } from '@octokit/types';
 import { Collection } from '@otchy/sim-doc-db';
 import { Json } from '@otchy/sim-doc-db/dist/types';
 import { GitHubRepo } from '../providers/GitHubProvider';
+import { Note, NoteMeta } from '../types';
 
 type RefResponse = OctokitResponse<
   {
@@ -100,15 +101,6 @@ type TextFileResponse = OctokitResponse<
   },
   200
 >;
-
-type NoteMeta = {
-  updatedAt: number;
-};
-
-type Note = NoteMeta & {
-  key: string;
-  content: string;
-};
 
 export class GitHubClient {
   api: Octokit;

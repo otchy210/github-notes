@@ -1,6 +1,7 @@
 import { Document } from '@otchy/sim-doc-db/dist/types';
 import React, { useEffect, useState } from 'react';
 import { useDatabase } from '../../providers/DatabaseProvider';
+import { Note } from '../../types';
 import { Draft, DraftMeta, useLocalStorage } from '../../utils/useLocalStorage';
 import { ListItem } from '../common/ListItem';
 import { NewNote } from '../common/NewNote';
@@ -8,26 +9,23 @@ import { NewNote } from '../common/NewNote';
 export const List: React.FC = () => {
   const localStorage = useLocalStorage();
   const [drafts, setDrafts] = useState<(Draft & DraftMeta)[]>(localStorage.listDraft());
-  const [notes, setNotes] = useState<Document[]>([]);
-  const { collection } = useDatabase();
+  const [notes, setNotes] = useState<Note[]>([]);
+  const { client: db } = useDatabase();
   const remove = (key: string) => {
     localStorage.removeDraft(key);
     setDrafts(localStorage.listDraft());
   };
   useEffect(() => {
-    if (!collection) {
+    if (!db) {
       setNotes([]);
       return;
     }
-    const notes = collection.getAll();
-    const sortedNotes = Array.from(notes).sort((left, right) => {
-      // TODO: Type values correctly
-      const leftUpdatedAt = left.values.updatedAt as number;
-      const rightUpdatedAt = right.values.updatedAt as number;
-      return rightUpdatedAt - leftUpdatedAt;
+    const notes = db.getAll();
+    const sortedNotes = notes.sort((left, right) => {
+      return right.updatedAt - left.updatedAt;
     });
     setNotes(sortedNotes);
-  }, [collection]);
+  }, [db]);
   return (
     <div className="list">
       {drafts.length > 0 && (
@@ -47,7 +45,7 @@ export const List: React.FC = () => {
             {notes.map((note) => {
               return (
                 <li>
-                  {note.values.key} {note.values.content} {note.values.updatedAt}
+                  {note.key} {note.content} {note.updatedAt}
                 </li>
               );
             })}

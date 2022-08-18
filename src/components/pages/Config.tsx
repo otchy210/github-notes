@@ -1,18 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useURLSearchParams } from '../../hooks/useURLSearchParams';
+import { useDatabase } from '../../providers/DatabaseProvider';
 import { useGitHub } from '../../providers/GitHubProvider';
 import { HeaderAndNav } from '../common/HeaderAndNav';
 
 type RepoStructureStatus = undefined | 'empty' | 'invalid' | 'avaiable' | 'error';
 
 export const Config: React.FC = () => {
-  const { user, accessToken, repoName, repoStatus, repo, client, setAccessToken, setRepository } = useGitHub();
+  const { user, accessToken, repoName, repoStatus, repo, client: git, setAccessToken, setRepository } = useGitHub();
   const accessTokenRef = useRef<HTMLInputElement>(null);
   const params = useURLSearchParams();
   const focus = params.get('focus');
   const [repoStructureStatus, setRepoStructureStatus] = useState<RepoStructureStatus>();
   const [initializingRepo, setInitializingRepo] = useState<boolean>(false);
+  const { client: db } = useDatabase();
+  const [recreatingIndex, setRecreatingIndex] = useState<boolean>(false);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -28,10 +31,10 @@ export const Config: React.FC = () => {
   }, [focus]);
 
   useEffect(() => {
-    if (!client) {
+    if (!git) {
       return;
     }
-    client
+    git
       .getHeadTree()
       .then(({ data }) => {
         const directories = data.tree
@@ -63,7 +66,7 @@ export const Config: React.FC = () => {
   }, [repo]);
 
   const initializeRepo = () => {
-    if (!client) {
+    if (!git) {
       return;
     }
     const confirmed = window.confirm('Are you sure to initialize the repository? It may override what you have now.');
@@ -72,9 +75,9 @@ export const Config: React.FC = () => {
     }
     setInitializingRepo(true);
     (async () => {
-      const metaReadme = await client.createTextBlob('# DO NOT EDIT THIS FOLDER MANUALLY');
-      const notesReadme = await client.createTextBlob('# DO NOT EDIT THIS FOLDER MANUALLY');
-      client
+      const metaReadme = await git.createTextBlob('# DO NOT EDIT THIS FOLDER MANUALLY');
+      const notesReadme = await git.createTextBlob('# DO NOT EDIT THIS FOLDER MANUALLY');
+      git
         .pushBlobs('Initialize repo', [
           { blob: metaReadme, path: 'meta/README.md' },
           { blob: notesReadme, path: 'notes/README.md' },
@@ -90,6 +93,27 @@ export const Config: React.FC = () => {
           setInitializingRepo(false);
         });
     })();
+  };
+  const recreateIndex = async () => {
+    if (!git || !db) {
+      return;
+    }
+    setRecreatingIndex(true);
+    const notesTree = await git.getNotesTree();
+    const keys = notesTree.data.tree
+      .map(({ path }) => path)
+      .filter((path) => {
+        return path && path.endsWith('.md') && path !== 'README.md';
+      })
+      .map((path) => path?.split('.')[0] ?? '');
+    console.log(keys);
+    const promises = keys.map((key) => git.getNote(key));
+    const notes = await Promise.all(promises);
+    db.refresh(notes);
+    console.log(notes);
+    // TODO: save it in git
+    console.log(db.export());
+    setRecreatingIndex(false);
   };
   return (
     <>
@@ -165,6 +189,19 @@ export const Config: React.FC = () => {
                 {initializingRepo ? 'Processing...' : 'Initialize'}
               </button>
             )}
+          </>
+        )}
+        {repo && repoStructureStatus === 'avaiable' && (
+          <>
+            <h2>Recreate database index</h2>
+            <p>
+              You can recreate database index by pushing following button. You don't need to do this usually because it should be done automatically. But in
+              case your database index is broken due to for example race condition, you can fix the problem by recreating database index.
+            </p>
+            <p className="warn">Note that it can take long time based on number of notes</p>
+            <button onClick={recreateIndex} disabled={recreatingIndex}>
+              {recreatingIndex ? 'Processing...' : 'Recreate index'}
+            </button>
           </>
         )}
       </main>
