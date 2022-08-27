@@ -99,6 +99,7 @@ button {
   border-radius: $border-radius;
   padding: $space-2 $space-4;
   background-color: $blue;
+  font-size: 1rem;
   color: $white;
   &:disabled {
     opacity: 0.7;
