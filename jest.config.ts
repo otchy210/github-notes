@@ -6,6 +6,7 @@ const config: Config.InitialOptions = {
   testEnvironment: 'jsdom',
   collectCoverage: true,
   errorOnDeprecated: true,
+  setupFilesAfterEnv: ['<rootDir>/src/setupJest.ts'],
   transform: {
     '^.+\\.scss$': 'jest-transform-stub',
   },
