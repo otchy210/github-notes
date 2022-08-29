@@ -46,15 +46,15 @@ li {
 
 code,
 pre {
-  border: $border;
+  border: solid 1px $gray-e;
   border-radius: $border-radius;
-  background-color: $border-color;
-  padding: 0.1rem;
+  background-color: $gray-e;
 }
-
+pre {
+  padding: 1rem;
+}
 code {
   font-size: 1rem;
-  color: $pink;
 }
 
 pre {
@@ -65,13 +65,15 @@ pre {
 }
 
 blockquote {
-  border-left: solid 0.5rem $border-color;
+  border-left: solid 0.25rem $border-color;
   padding-left: 0.5rem;
 }
 
 hr {
-  border-color: $border-color;
-  border-width: 1px 0 0 0;
+  border: 0;
+  height: 0.25rem;
+  margin: 1rem 0;
+  background-color: $border-color;
   width: 100%;
 }
 
