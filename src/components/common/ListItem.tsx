@@ -20,7 +20,7 @@ export const ListItem: React.FC<Props> = ({ draft, remove }: Props) => {
         <h3>{draft.title}</h3>
         <small>
           {draft.updatedAt ? `${formatTime(draft.updatedAt)} - ` : ''}
-          {draft.body}
+          {draft.body.slice(0, 512)}
         </small>
       </Link>
       <div className="icon-more" onClick={toggleMenuOpened}>
