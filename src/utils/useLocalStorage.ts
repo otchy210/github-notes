@@ -1,18 +1,10 @@
+import { Note, NoteMeta } from '../types';
+
 const prefix = 'GitHubNotes-';
 const prefixDraft = `${prefix}Draft-`;
 const prefixDraftMeta = `${prefixDraft}Meta-`;
 
 export type LocalStorageNames = 'accessToken' | 'repository';
-
-export type Draft = {
-  key: string;
-  title: string;
-  body: string;
-};
-
-export type DraftMeta = {
-  updatedAt: number;
-};
 
 type LocalStorage = {
   get: (name: LocalStorageNames, defaultValue?: string) => string;
@@ -20,7 +12,7 @@ type LocalStorage = {
   getDraft: (key: string) => string;
   setDraft: (key: string, draft: string) => LocalStorage;
   removeDraft: (key: string) => LocalStorage;
-  listDraft: () => (Draft & DraftMeta)[];
+  listDraft: () => Note[];
 };
 
 const localStorage: LocalStorage = {
@@ -36,7 +28,7 @@ const localStorage: LocalStorage = {
   },
   setDraft: (key: string, draft: string) => {
     window.localStorage.setItem(`${prefixDraft}${key}`, draft);
-    const meta: DraftMeta = {
+    const meta: NoteMeta = {
       updatedAt: Date.now(),
     };
     window.localStorage.setItem(`${prefixDraftMeta}${key}`, JSON.stringify(meta));
@@ -47,19 +39,16 @@ const localStorage: LocalStorage = {
     window.localStorage.removeItem(`${prefixDraftMeta}${key}`);
     return localStorage;
   },
-  listDraft: (): (Draft & DraftMeta)[] => {
+  listDraft: (): Note[] => {
     return Object.entries(window.localStorage)
       .filter(([key]) => {
         return key.startsWith(prefixDraft) && !key.startsWith(prefixDraftMeta);
       })
-      .map(([lsKey, draft]) => {
+      .map(([lsKey, content]) => {
         const key = lsKey.slice(prefixDraft.length);
-        const lines = draft.split('\n');
-        const title = lines.length > 0 ? lines[0] : '<empty>';
-        const body = lines.length > 1 ? lines.slice(1).join(' ') : '<empty>';
         const metaStr = window.localStorage.getItem(`${prefixDraftMeta}${key}`);
-        const meta: DraftMeta = metaStr ? (JSON.parse(metaStr) as DraftMeta) : { updatedAt: 0 };
-        return { key, title, body, ...meta };
+        const meta: NoteMeta = metaStr ? (JSON.parse(metaStr) as NoteMeta) : { updatedAt: 0 };
+        return { key, content, ...meta };
       })
       .sort((left, right) => {
         return right.updatedAt - left.updatedAt;

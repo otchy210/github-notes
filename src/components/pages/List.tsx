@@ -1,19 +1,21 @@
-import { Document } from '@otchy/sim-doc-db/dist/types';
 import React, { useEffect, useState } from 'react';
 import { useDatabase } from '../../providers/DatabaseProvider';
 import { Note } from '../../types';
-import { Draft, DraftMeta, useLocalStorage } from '../../utils/useLocalStorage';
+import { useLocalStorage } from '../../utils/useLocalStorage';
 import { ListItem } from '../common/ListItem';
 import { NewNote } from '../common/NewNote';
 
 export const List: React.FC = () => {
   const localStorage = useLocalStorage();
-  const [drafts, setDrafts] = useState<(Draft & DraftMeta)[]>(localStorage.listDraft());
+  const [drafts, setDrafts] = useState<Note[]>(localStorage.listDraft());
   const [notes, setNotes] = useState<Note[]>([]);
   const { client: db } = useDatabase();
-  const remove = (key: string) => {
+  const removeDraft = (key: string) => {
     localStorage.removeDraft(key);
     setDrafts(localStorage.listDraft());
+  };
+  const removeNote = (key: string) => {
+    console.log(`Remove note: ${key}`);
   };
   useEffect(() => {
     if (!db) {
@@ -32,8 +34,8 @@ export const List: React.FC = () => {
         <>
           <h2>Draft</h2>
           <ul>
-            {drafts.map((draft) => (
-              <ListItem draft={draft} remove={remove} key={draft.key} />
+            {drafts.map((note) => (
+              <ListItem note={note} remove={removeDraft} key={note.key} />
             ))}
           </ul>
         </>
@@ -42,13 +44,9 @@ export const List: React.FC = () => {
         <>
           <h2>Notes</h2>
           <ul>
-            {notes.map((note) => {
-              return (
-                <li>
-                  {note.key} {note.content} {note.updatedAt}
-                </li>
-              );
-            })}
+            {notes.map((note) => (
+              <ListItem note={note} remove={removeNote} key={note.key} />
+            ))}
           </ul>
         </>
       )}

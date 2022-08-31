@@ -1,32 +1,36 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Note } from '../../types';
 import { classNames } from '../../utils/classNames';
 import { formatTime } from '../../utils/formatTime';
-import { Draft, DraftMeta } from '../../utils/useLocalStorage';
 
 type Props = {
-  draft: Draft & DraftMeta;
+  note: Note;
   remove: (key: string) => void;
 };
 
-export const ListItem: React.FC<Props> = ({ draft, remove }: Props) => {
+export const ListItem: React.FC<Props> = ({ note, remove }: Props) => {
   const [menuOpened, setMenuOpened] = useState<boolean>(false);
+  const lines = note.content.split('\n');
+  const title = lines.length > 0 ? lines[0] : '<empty>';
+  const body = lines.length > 1 ? lines.slice(1).join(' ') : '<empty>';
+
   const toggleMenuOpened = () => {
     setMenuOpened(!menuOpened);
   };
   return (
     <li className={classNames({ 'menu-opened': menuOpened })}>
-      <Link to={`/edit?key=${draft.key}`}>
-        <h3>{draft.title}</h3>
+      <Link to={`/edit?key=${note.key}`}>
+        <h3>{title}</h3>
         <small>
-          {draft.updatedAt ? `${formatTime(draft.updatedAt)} - ` : ''}
-          {draft.body.slice(0, 512)}
+          {note.updatedAt ? `${formatTime(note.updatedAt)} - ` : ''}
+          {body.slice(0, 512)}
         </small>
       </Link>
       <div className="icon-more" onClick={toggleMenuOpened}>
         <img src="/images/icon-more.svg" />
       </div>
-      <div className="menu" onClick={() => remove(draft.key)}>
+      <div className="menu" onClick={() => remove(note.key)}>
         <img src="/images/icon-delete.svg" />
       </div>
     </li>
