@@ -1,6 +1,5 @@
 import { Octokit } from '@octokit/rest';
 import { OctokitResponse } from '@octokit/types';
-import { Collection } from '@otchy/sim-doc-db';
 import { Json } from '@otchy/sim-doc-db/dist/types';
 import { GitHubRepo } from '../providers/GitHubProvider';
 import { Note, NoteMeta } from '../types';
@@ -199,5 +198,11 @@ export class GitHubClient {
   async getDb(): Promise<Json> {
     const jsonText = await this.getTextContent('meta/database.json');
     return JSON.parse(jsonText) as Json;
+  }
+  async pushDb(db: Json): Promise<Json> {
+    const jsonText = JSON.stringify(db);
+    const dbBlob = await this.createTextBlob(jsonText);
+    await this.pushBlobs('Save DB', [{ blob: dbBlob, path: 'meta/database.json' }]);
+    return db;
   }
 }

@@ -106,13 +106,10 @@ export const Config: React.FC = () => {
         return path && path.endsWith('.md') && path !== 'README.md';
       })
       .map((path) => path?.split('.')[0] ?? '');
-    console.log(keys);
     const promises = keys.map((key) => git.getNote(key));
     const notes = await Promise.all(promises);
     db.refresh(notes);
-    console.log(notes);
-    // TODO: save it in git
-    console.log(db.export());
+    await git.pushDb(db.export());
     setRecreatingIndex(false);
   };
   return (
