@@ -35,7 +35,7 @@ export const List: React.FC = () => {
           <h2>Draft</h2>
           <ul>
             {drafts.map((note) => (
-              <ListItem note={note} remove={removeDraft} key={note.key} />
+              <ListItem note={note} isDraft={true} remove={removeDraft} key={note.key} />
             ))}
           </ul>
         </>
@@ -45,7 +45,7 @@ export const List: React.FC = () => {
           <h2>Notes</h2>
           <ul>
             {notes.map((note) => (
-              <ListItem note={note} remove={removeNote} key={note.key} />
+              <ListItem note={note} isDraft={false} remove={removeNote} key={note.key} />
             ))}
           </ul>
         </>

@@ -7,6 +7,7 @@ import { Config } from './pages/Config';
 import { Edit } from './pages/Edit';
 import { Home } from './pages/Home';
 import { Preview } from './pages/Preview';
+import { View } from './pages/View';
 
 export const App: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ export const App: React.FC = () => {
             <Route path="/config" element={<Config />} />
             <Route path="/edit" element={<Edit />} />
             <Route path="/preview" element={<Preview />} />
+            <Route path="/view" element={<View />} />
           </Routes>
         </HashRouter>
       </DatabaseProvider>

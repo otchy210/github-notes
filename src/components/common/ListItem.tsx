@@ -6,21 +6,23 @@ import { formatTime } from '../../utils/formatTime';
 
 type Props = {
   note: Note;
+  isDraft: boolean;
   remove: (key: string) => void;
 };
 
-export const ListItem: React.FC<Props> = ({ note, remove }: Props) => {
+export const ListItem: React.FC<Props> = ({ note, isDraft, remove }: Props) => {
   const [menuOpened, setMenuOpened] = useState<boolean>(false);
   const lines = note.content.split('\n');
   const title = lines.length > 0 ? lines[0] : '<empty>';
   const body = lines.length > 1 ? lines.slice(1).join(' ') : '<empty>';
+  const page = isDraft ? 'edit' : 'view';
 
   const toggleMenuOpened = () => {
     setMenuOpened(!menuOpened);
   };
   return (
     <li className={classNames({ 'menu-opened': menuOpened })}>
-      <Link to={`/edit?key=${note.key}`}>
+      <Link to={`/${page}?key=${note.key}`}>
         <h3>{title}</h3>
         <small>
           {note.updatedAt ? `${formatTime(note.updatedAt)} - ` : ''}

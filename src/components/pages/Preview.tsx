@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useURLSearchParams } from '../../hooks/useURLSearchParams';
 import { useGitHub } from '../../providers/GitHubProvider';
 import { useLocalStorage } from '../../utils/useLocalStorage';
-import { View } from '../common/View';
+import { Render } from '../common/Render';
 
 export const Preview: React.FC = () => {
   const [saving, setSaving] = useState<boolean>(false);
@@ -51,7 +51,7 @@ export const Preview: React.FC = () => {
         </div>
       </header>
       <main>
-        <View text={draft} />
+        <Render text={draft} />
       </main>
     </>
   );

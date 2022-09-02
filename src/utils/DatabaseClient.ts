@@ -31,6 +31,14 @@ export class DatabaseClient {
   getAll(): Note[] {
     return Array.from(this.collection.getAll()).map((doc) => doc.values) as Note[];
   }
+  find(key: string): Note | undefined {
+    const docs = this.collection.find({ key });
+    if (docs.size === 0) {
+      return undefined;
+    }
+    const doc = Array.from(docs)[0];
+    return doc.values as Note;
+  }
   refresh(notes: Note[]) {
     this.collection.clear();
     notes.forEach((note) => this.add(note));

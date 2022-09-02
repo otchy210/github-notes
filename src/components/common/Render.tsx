@@ -5,9 +5,9 @@ type Props = {
   text: string;
 };
 
-export const View: React.FC<Props> = ({ text }) => {
+export const Render: React.FC<Props> = ({ text }) => {
   const md = useMarkdown();
   const renderedHTML = md.render(text);
 
-  return <div className="view" dangerouslySetInnerHTML={{ __html: renderedHTML }}></div>;
+  return <div dangerouslySetInnerHTML={{ __html: renderedHTML }}></div>;
 };
