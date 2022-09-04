@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 @import './reset.scss';
 //@import './reset.css';
 
@@ -212,6 +214,28 @@ main {
         }
         small {
           color: $gray-4;
+          font-size: 0.5rem;
+        }
+      }
+      .disabled {
+        width: calc(100vw - $space-4);
+        background-color: $gray-e;
+        h3,
+        small {
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          color: $gray-4;
+        }
+        h3 {
+          font-size: 1rem;
+          img {
+            width: math.div($icon-width, 3);
+            vertical-align: middle;
+          }
+        }
+        small {
           font-size: 0.5rem;
         }
       }

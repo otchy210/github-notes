@@ -8,6 +8,7 @@ import { NewNote } from '../common/NewNote';
 export const List: React.FC = () => {
   const localStorage = useLocalStorage();
   const [drafts, setDrafts] = useState<Note[]>(localStorage.listDraft());
+  const draftKeys = new Set(drafts.map((draft) => draft.key));
   const [notes, setNotes] = useState<Note[]>([]);
   const { client: db } = useDatabase();
   const removeDraft = (key: string) => {
@@ -35,7 +36,7 @@ export const List: React.FC = () => {
           <h2>Draft</h2>
           <ul>
             {drafts.map((note) => (
-              <ListItem note={note} isDraft={true} remove={removeDraft} key={note.key} />
+              <ListItem note={note} isDraft={true} isDisabled={false} remove={removeDraft} key={note.key} />
             ))}
           </ul>
         </>
@@ -45,7 +46,7 @@ export const List: React.FC = () => {
           <h2>Notes</h2>
           <ul>
             {notes.map((note) => (
-              <ListItem note={note} isDraft={false} remove={removeNote} key={note.key} />
+              <ListItem note={note} isDraft={false} isDisabled={draftKeys.has(note.key)} remove={removeNote} key={note.key} />
             ))}
           </ul>
         </>
