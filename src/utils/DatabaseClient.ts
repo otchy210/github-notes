@@ -28,6 +28,22 @@ export class DatabaseClient {
   add(note: Note): Document {
     return this.collection.add({ values: note });
   }
+  /**
+   * Update if note.key exsits in DB otherwise add
+   */
+  addOrUpdate(note: Note): Document {
+    const { key } = note;
+    const doc = this.collection.find({ key });
+    if (doc.size === 0) {
+      return this.add(note);
+    } else {
+      const { id } = Array.from(doc)[0];
+      return this.collection.update({
+        id,
+        values: note,
+      });
+    }
+  }
   getAll(): Note[] {
     return Array.from(this.collection.getAll()).map((doc) => doc.values) as Note[];
   }

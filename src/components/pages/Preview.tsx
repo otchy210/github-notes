@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useURLSearchParams } from '../../hooks/useURLSearchParams';
+import { useDatabase } from '../../providers/DatabaseProvider';
 import { useGitHub } from '../../providers/GitHubProvider';
 import { useLocalStorage } from '../../utils/useLocalStorage';
 import { Render } from '../common/Render';
@@ -8,23 +9,32 @@ import { Render } from '../common/Render';
 export const Preview: React.FC = () => {
   const [saving, setSaving] = useState<boolean>(false);
   const params = useURLSearchParams();
-  const { client } = useGitHub();
+  const { client: git } = useGitHub();
+  const { client: db } = useDatabase();
   const key = params.get('key');
   if (!key) {
     console.error(`key has to be provided`);
+    return null;
+  }
+  if (!git) {
+    console.error("Can't access GitHub");
+    return null;
+  }
+  if (!db) {
+    console.error("Can't access DB");
     return null;
   }
   const localStorage = useLocalStorage();
   const draft = localStorage.getDraft(key);
   const navigate = useNavigate();
   const save = async () => {
-    if (!client) {
-      console.error("Can't access GitHub");
-      return;
-    }
     setSaving(true);
-    await client.pushNote(key, draft);
+    await git.pushNote(key, draft);
     localStorage.removeDraft(key);
+    const latestDb = await git.getDb();
+    db.import(latestDb);
+    db.addOrUpdate({ key, content: draft, updatedAt: Date.now() });
+    await git.pushDb(db.export());
     setSaving(false);
     navigate('/');
   };
