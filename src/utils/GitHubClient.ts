@@ -147,8 +147,11 @@ export class GitHubClient {
     const newCommit = await this.api.git.createCommit({ ...this.repo.apiParam, message, parents: [commitSha], tree: newTree.data.sha });
     return this.api.git.updateRef({ ...this.repo.apiParam, ref: `heads/${this.repo.defaultBranch}`, sha: newCommit.data.sha });
   }
+  private async getTextFile(path: string): Promise<TextFileResponse> {
+    return (await this.api.repos.getContent({ ...this.repo.apiParam, path })) as TextFileResponse;
+  }
   private async getTextContent(path: string): Promise<string> {
-    const file = (await this.api.repos.getContent({ ...this.repo.apiParam, path })) as TextFileResponse;
+    const file = await this.getTextFile(path);
     const { type, encoding, content } = file.data;
     if (type !== 'file') {
       throw new Error(`note type is not file: ${type}`);
@@ -161,6 +164,15 @@ export class GitHubClient {
     }
     const response = await window.fetch(`data:text/plain;charset=UTF-8;base64,${content}`);
     return response.text();
+  }
+  private async deleteTextFile(path: string, message: string) {
+    const file = await this.getTextFile(path);
+    return this.api.repos.deleteFile({
+      ...this.repo.apiParam,
+      path,
+      message,
+      sha: file.data.sha,
+    });
   }
   private async getNoteContent(key: string): Promise<string> {
     return this.getTextContent(`notes/${key}.md`);
@@ -194,6 +206,10 @@ export class GitHubClient {
       content,
       ...meta,
     };
+  }
+  async deleteNote(key: string) {
+    await this.deleteTextFile(`notes/${key}.md`, 'Delete note');
+    await this.deleteTextFile(`meta/${key}.json`, 'Delete note');
   }
   async getDb(): Promise<Json> {
     const jsonText = await this.getTextContent('meta/database.json');
