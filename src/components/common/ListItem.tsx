@@ -8,11 +8,12 @@ type Props = {
   note: Note;
   isDraft: boolean;
   isDisabled: boolean;
-  remove: (key: string) => void;
+  remove: (key: string) => Promise<void>;
 };
 
 export const ListItem: React.FC<Props> = ({ note, isDraft, isDisabled, remove }: Props) => {
   const [menuOpened, setMenuOpened] = useState<boolean>(false);
+  const [removing, setRemoving] = useState<boolean>(false);
   const lines = note.content.split('\n');
   const title = lines.length > 0 ? lines[0] : '<empty>';
   const body = lines.length > 1 ? lines.slice(1).join(' ') : '<empty>';
@@ -20,6 +21,11 @@ export const ListItem: React.FC<Props> = ({ note, isDraft, isDisabled, remove }:
 
   const toggleMenuOpened = () => {
     setMenuOpened(!menuOpened);
+  };
+  const onClickRemove = async () => {
+    setRemoving(true);
+    await remove(note.key);
+    setRemoving(false);
   };
   return (
     <li className={classNames({ 'menu-opened': menuOpened })}>
@@ -46,9 +52,15 @@ export const ListItem: React.FC<Props> = ({ note, isDraft, isDisabled, remove }:
           <div className="icon-more" onClick={toggleMenuOpened}>
             <img src="/images/icon-more.svg" />
           </div>
-          <div className="menu" onClick={() => remove(note.key)}>
-            <img src="/images/icon-delete.svg" />
-          </div>
+          {removing ? (
+            <div className="menu loading">
+              <img src="/images/icon-circle.svg" />
+            </div>
+          ) : (
+            <div className="menu delete" onClick={onClickRemove}>
+              <img src="/images/icon-delete.svg" />
+            </div>
+          )}
         </>
       )}
     </li>

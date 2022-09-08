@@ -33,16 +33,24 @@ export class DatabaseClient {
    */
   addOrUpdate(note: Note): Document {
     const { key } = note;
-    const doc = this.collection.find({ key });
-    if (doc.size === 0) {
+    const docs = this.collection.find({ key });
+    if (docs.size === 0) {
       return this.add(note);
     } else {
-      const { id } = Array.from(doc)[0];
+      const { id } = Array.from(docs)[0];
       return this.collection.update({
         id,
         values: note,
       });
     }
+  }
+  remove(key: string): Document | undefined {
+    const docs = this.collection.find({ key });
+    if (docs.size === 0) {
+      return undefined;
+    }
+    this.collection.removeMatched({ key });
+    return Array.from(docs)[0];
   }
   getAll(): Note[] {
     return Array.from(this.collection.getAll()).map((doc) => doc.values) as Note[];

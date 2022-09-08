@@ -209,7 +209,7 @@ export class GitHubClient {
   }
   async deleteNote(key: string) {
     await this.deleteTextFile(`notes/${key}.md`, 'Delete note');
-    await this.deleteTextFile(`meta/${key}.json`, 'Delete note');
+    await this.deleteTextFile(`meta/${key}.json`, 'Delete note meta');
   }
   async getDb(): Promise<Json> {
     const jsonText = await this.getTextContent('meta/database.json');
