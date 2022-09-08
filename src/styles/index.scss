@@ -129,6 +129,10 @@ header {
         width: 100%;
       }
     }
+    & > hr {
+      margin: 0;
+      height: 1px;
+    }
   }
 }
 
