@@ -20,6 +20,7 @@ exports[`Config matches snapshot 1`] = `
       <div>
         <input
           placeholder="Search notes"
+          value=""
         />
       </div>
     </form>

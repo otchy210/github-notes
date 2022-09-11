@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useGitHub } from '../../providers/GitHubProvider';
+import { useSearchQuery } from '../../providers/SearchQueryProvider';
 
 type Props = {
   toggleNavShown: () => void;
@@ -8,6 +9,7 @@ type Props = {
 
 export const Header: React.FC<Props> = ({ toggleNavShown }: Props) => {
   const { user } = useGitHub();
+  const { query, setQuery } = useSearchQuery();
   const [userPanelShown, setUserPanelShown] = useState<boolean>(false);
   const toggleUserPanelShown = () => {
     setUserPanelShown(!userPanelShown);
@@ -21,7 +23,7 @@ export const Header: React.FC<Props> = ({ toggleNavShown }: Props) => {
       </div>
       <form className="search">
         <div>
-          <input placeholder="Search notes" />
+          <input placeholder="Search notes" value={query} onChange={(e) => setQuery(e.target.value)} />
         </div>
       </form>
       <div className="icon-holder">
