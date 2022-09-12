@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useDatabase } from '../../providers/DatabaseProvider';
 import { useGitHub } from '../../providers/GitHubProvider';
+import { useSearchQuery } from '../../providers/SearchQueryProvider';
 import { Note } from '../../types';
 import { DatabaseClient } from '../../utils/DatabaseClient';
 import { useLocalStorage } from '../../utils/useLocalStorage';
 import { ListItem } from '../common/ListItem';
 import { NewNote } from '../common/NewNote';
 
-const sortedNotes = (db: DatabaseClient): Note[] => {
-  const notes = db.getAll();
+const getNotes = (db: DatabaseClient, query?: string): Note[] => {
+  if (query && query.length > 0) {
+    return db.search(query);
+  } else {
+    return db.getAll();
+  }
+};
+
+const sortedNotes = (db: DatabaseClient, query?: string): Note[] => {
+  const notes = getNotes(db, query);
   return notes.sort((left, right) => {
     return right.updatedAt - left.updatedAt;
   });
@@ -21,6 +30,7 @@ export const List: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const { client: db } = useDatabase();
   const { client: git } = useGitHub();
+  const { query } = useSearchQuery();
   const removeDraft = async (key: string) => {
     localStorage.removeDraft(key);
     setDrafts(localStorage.listDraft());
@@ -41,11 +51,11 @@ export const List: React.FC = () => {
       setNotes([]);
       return;
     }
-    setNotes(sortedNotes(db));
-  }, [db]);
+    setNotes(sortedNotes(db, query));
+  }, [db, query]);
   return (
     <div className="list">
-      {drafts.length > 0 && (
+      {drafts.length > 0 && query.length === 0 && (
         <>
           <h2>Draft</h2>
           <ul>

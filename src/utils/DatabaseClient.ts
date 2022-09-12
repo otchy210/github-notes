@@ -63,6 +63,9 @@ export class DatabaseClient {
     const doc = Array.from(docs)[0];
     return doc.values as Note;
   }
+  search(query: string): Note[] {
+    return Array.from(this.collection.find({ content: query })).map((doc) => doc.values as Note);
+  }
   refresh(notes: Note[]) {
     this.collection.clear();
     notes.forEach((note) => this.add(note));
