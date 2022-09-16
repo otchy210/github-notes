@@ -20,6 +20,10 @@ a.text {
   color: $color;
 }
 
+.highlight {
+  background-color: $yellow;
+}
+
 @keyframes loading {
   from {
     opacity: 1;
