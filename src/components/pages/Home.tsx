@@ -5,11 +5,21 @@ import { Guide } from './Guide';
 import { List } from './List';
 
 export const Home: React.FC = () => {
-  const { client } = useGitHub();
+  const { repoStatus, client } = useGitHub();
   return (
     <>
       <HeaderAndNav />
-      <main className="home">{client ? <List /> : <Guide />}</main>
+      <main className="home">
+        {repoStatus === 'unknown' ? (
+          <div className="icon loading">
+            <img src="/images/icon-circle.svg" />
+          </div>
+        ) : client ? (
+          <List />
+        ) : (
+          <Guide />
+        )}
+      </main>
     </>
   );
 };

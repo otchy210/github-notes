@@ -21,7 +21,7 @@ type GitHubUser = {
   avatarUrl: string;
 };
 
-type RepoStatus = undefined | 'empty' | 'invalid' | 'avaiable' | 'error';
+type RepoStatus = 'unknown' | 'unavaiable' | 'empty' | 'invalid' | 'avaiable' | 'error';
 
 export type GitHubRepo = {
   apiParam: {
@@ -37,7 +37,7 @@ type GitHubContextValues = {
   accessToken?: string;
   user?: GitHubUser;
   repoName?: string;
-  repoStatus?: RepoStatus;
+  repoStatus: RepoStatus;
   repo?: GitHubRepo;
   client?: GitHubClient;
   setAccessToken: (accessToken: string) => void;
@@ -45,6 +45,7 @@ type GitHubContextValues = {
 };
 
 const GitHubContext = createContext<GitHubContextValues>({
+  repoStatus: 'unknown',
   setAccessToken: (accessToken: string) => {
     console.error(`setAccessToken is not yer ready. Following value was not stored: ${accessToken}`);
   },
@@ -59,11 +60,12 @@ type Props = {
 
 export const GitHubProvider: React.FC<Props> = ({ children }) => {
   const localStorage = useLocalStorage();
+  const [initialLoad, setInitialLoad] = useState<boolean>(true);
   const [accessToken, setAccessTokenState] = useState<string>(localStorage.get('accessToken', ''));
   const [api, setApi] = useState<Octokit>();
   const [user, setUser] = useState<GitHubUser>();
   const [repoName, setRepoName] = useState<string>(localStorage.get('repository', ''));
-  const [repoStatus, setRepoStatus] = useState<RepoStatus>();
+  const [repoStatus, setRepoStatus] = useState<RepoStatus>('unknown');
   const [repo, setRepo] = useState<GitHubRepo>();
   const [client, setClient] = useState<GitHubClient>();
 
@@ -77,7 +79,7 @@ export const GitHubProvider: React.FC<Props> = ({ children }) => {
     setRepoName(repository);
   };
 
-  const setRepoAndStatus = (repo: GitHubRepo | undefined, repoStatus: RepoStatus | undefined) => {
+  const setRepoAndStatus = (repo: GitHubRepo | undefined, repoStatus: RepoStatus) => {
     setRepo(repo);
     setRepoStatus(repoStatus);
     if (api !== undefined && repo !== undefined && repoStatus === 'avaiable') {
@@ -94,7 +96,11 @@ export const GitHubProvider: React.FC<Props> = ({ children }) => {
   }, [accessToken]);
 
   useEffect(() => {
-    api?.users
+    if (!api) {
+      // initial load
+      return;
+    }
+    api.users
       .getAuthenticated()
       .then(({ data }) => {
         const user: GitHubUser = {
@@ -108,13 +114,18 @@ export const GitHubProvider: React.FC<Props> = ({ children }) => {
       })
       .catch((e) => {
         console.warn(e);
+        setRepoAndStatus(undefined, 'unavaiable');
         setUser(undefined);
       });
   }, [api]);
 
   useEffect(() => {
+    if (initialLoad) {
+      setInitialLoad(false);
+      return;
+    }
     if (!api || !user) {
-      setRepoAndStatus(undefined, undefined);
+      setRepoAndStatus(undefined, 'unavaiable');
       return;
     }
     if (!repoName) {
