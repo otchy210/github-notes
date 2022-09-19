@@ -4,7 +4,7 @@ const prefix = 'GitHubNotes-';
 const prefixDraft = `${prefix}Draft-`;
 const prefixDraftMeta = `${prefixDraft}Meta-`;
 
-export type LocalStorageNames = 'accessToken' | 'repository';
+export type LocalStorageNames = 'accessToken' | 'repository' | 'languageKey';
 
 type LocalStorage = {
   get: (name: LocalStorageNames, defaultValue?: string) => string;
