@@ -2,7 +2,7 @@ import React, { ReactNode, useState } from 'react';
 import { createContext, useContext } from 'react';
 import { useLocalStorage } from '../utils/useLocalStorage';
 
-type LanguageKey = 'en' | 'ja';
+export type LanguageKey = 'en' | 'ja';
 
 type Language = {
   key: LanguageKey;
