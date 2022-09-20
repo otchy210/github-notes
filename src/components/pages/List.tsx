@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDatabase } from '../../providers/DatabaseProvider';
 import { useGitHub } from '../../providers/GitHubProvider';
+import { useI18n } from '../../providers/I18nProvider';
 import { useSearchQuery } from '../../providers/SearchQueryProvider';
 import { Note } from '../../types';
 import { DatabaseClient } from '../../utils/DatabaseClient';
@@ -31,6 +32,7 @@ export const List: React.FC = () => {
   const { client: db } = useDatabase();
   const { client: git } = useGitHub();
   const { query } = useSearchQuery();
+  const { t } = useI18n();
   const removeDraft = async (key: string) => {
     localStorage.removeDraft(key);
     setDrafts(localStorage.listDraft());
@@ -67,7 +69,9 @@ export const List: React.FC = () => {
       )}
       {notes.length > 0 && (
         <>
-          <h2>Notes</h2>
+          <h2>
+            Notes<small style={{ color: 'red' }}>{t('test').toString()}</small>
+          </h2>
           <ul>
             {notes.map((note) => (
               <ListItem note={note} isDraft={false} isDisabled={draftKeys.has(note.key)} remove={removeNote} key={note.key} />

@@ -1,4 +1,5 @@
-import React, { ReactNode, useState } from 'react';
+import i18next, { TFunction } from 'i18next';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { createContext, useContext } from 'react';
 import { useLocalStorage } from '../utils/useLocalStorage';
 
@@ -17,6 +18,7 @@ export const LANGUAGES: Language[] = [
 type I18nContextValue = {
   langKey: LanguageKey;
   setLangKey: (langKey: LanguageKey) => void;
+  t: TFunction;
 };
 
 const getLangKey = (): LanguageKey => {
@@ -37,7 +39,7 @@ const getLangKey = (): LanguageKey => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-const I18nContext = createContext<I18nContextValue>({ langKey: getLangKey(), setLangKey: () => {} });
+const I18nContext = createContext<I18nContextValue>({ langKey: getLangKey(), setLangKey: () => {}, t: i18next.t });
 
 export const useI18n = (): I18nContextValue => {
   return useContext(I18nContext);
@@ -53,8 +55,26 @@ const I18nProvider: React.FC<Props> = ({ children }) => {
   const setLangKey = (langKey: LanguageKey) => {
     setStateLangKey(langKey);
     ls.set('languageKey', langKey);
+    location.reload();
   };
-  return <I18nContext.Provider value={{ langKey, setLangKey }}>{children}</I18nContext.Provider>;
+  useEffect(() => {
+    i18next.init({
+      lng: langKey,
+      resources: {
+        en: {
+          translation: {
+            test: 'TEST',
+          },
+        },
+        ja: {
+          translation: {
+            test: 'テスト',
+          },
+        },
+      },
+    });
+  }, [langKey]);
+  return <I18nContext.Provider value={{ langKey, setLangKey, t: i18next.t }}>{children}</I18nContext.Provider>;
 };
 
 export default I18nProvider;
