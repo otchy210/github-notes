@@ -14,6 +14,7 @@ export const LANGUAGES: Language[] = [
   { key: 'en', label: 'English' },
   { key: 'ja', label: 'Japanese' },
 ];
+// t('English') t('Japanese')
 
 type I18nContextValue = {
   langKey: LanguageKey;
