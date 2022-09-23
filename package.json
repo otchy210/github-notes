@@ -1,6 +1,6 @@
 {
   "name": "@otchy/github-notes",
-  "version": "0.0.65",
+  "version": "0.0.66",
   "description": "Alternative of Apple Notes which stores notes in GitHub",
   "scripts": {
     "build": "webpack",
@@ -37,6 +37,7 @@
     "css-loader": "^6.7.1",
     "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.5.0",
+    "i18next-http-backend": "^1.4.4",
     "i18next-parser": "^6.5.0",
     "jest": "^28.1.2",
     "jest-environment-jsdom": "^28.1.2",
