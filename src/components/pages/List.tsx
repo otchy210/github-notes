@@ -70,7 +70,7 @@ export const List: React.FC = () => {
       {notes.length > 0 && (
         <>
           <h2>
-            Notes<small style={{ color: 'red' }}>{t('test').toString()}</small>
+            Notes<small style={{ color: 'red' }}></small>
           </h2>
           <ul>
             {notes.map((note) => (

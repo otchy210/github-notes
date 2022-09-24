@@ -13,6 +13,7 @@ export const Header: React.FC<Props> = ({ toggleNavShown }: Props) => {
   const { query, setQuery } = useSearchQuery();
   const [userPanelShown, setUserPanelShown] = useState<boolean>(false);
   const { langKey, setLangKey } = useI18n();
+  const { t } = useI18n();
   const toggleUserPanelShown = () => {
     setUserPanelShown(!userPanelShown);
   };
@@ -47,10 +48,10 @@ export const Header: React.FC<Props> = ({ toggleNavShown }: Props) => {
           <hr />
           <div>
             <select onChange={(e) => setLangKey(e.target.value as LanguageKey)}>
-              {LANGUAGES.map(({ key, label }) => {
+              {LANGUAGES.map(({ key, label, flag }) => {
                 return (
                   <option value={key} selected={key === langKey}>
-                    {label}
+                    {`${flag}${t(label)}`}
                   </option>
                 );
               })}
@@ -59,7 +60,7 @@ export const Header: React.FC<Props> = ({ toggleNavShown }: Props) => {
           <hr />
           <div>
             <Link to="/config?focus=accessToken" onClick={() => setUserPanelShown(false)} className="text">
-              {user ? 'Logout' : 'Login'}
+              {user ? `${t('Logout')}` : `${t('Login')}`}
             </Link>
           </div>
         </div>

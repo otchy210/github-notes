@@ -9,11 +9,12 @@ export type LanguageKey = 'en' | 'ja';
 type Language = {
   key: LanguageKey;
   label: string;
+  flag: string;
 };
 
 export const LANGUAGES: Language[] = [
-  { key: 'en', label: 'English' },
-  { key: 'ja', label: 'Japanese' },
+  { key: 'en', label: 'English', flag: '🇬🇧' },
+  { key: 'ja', label: 'Japanese', flag: '🇯🇵' },
 ];
 // t('English') t('Japanese')
 
@@ -57,9 +58,10 @@ const I18nProvider: React.FC<Props> = ({ children }) => {
   const [isReady, setIsReady] = useState<boolean>(false);
   const ls = useLocalStorage();
   const setLangKey = (langKey: LanguageKey) => {
-    setStateLangKey(langKey);
-    ls.set('languageKey', langKey);
-    i18next.changeLanguage(langKey);
+    i18next.changeLanguage(langKey).then(() => {
+      setStateLangKey(langKey);
+      ls.set('languageKey', langKey);
+    });
   };
   useEffect(() => {
     i18next
@@ -70,11 +72,16 @@ const I18nProvider: React.FC<Props> = ({ children }) => {
         backend: {
           loadPath: '/locales/{{lng}}.json',
         },
+        returnEmptyString: false,
+        nsSeparator: ':::',
+        keySeparator: '::',
+        pluralSeparator: '__',
+        contextSeparator: '__',
       })
       .then(() => {
         setIsReady(true);
       });
-  }, [langKey]);
+  }, []);
   return <I18nContext.Provider value={{ langKey, setLangKey, isReady, t: i18next.t }}>{children}</I18nContext.Provider>;
 };
 
