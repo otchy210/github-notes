@@ -1,4 +1,4 @@
-import i18next, { TFunction } from 'i18next';
+import i18next from 'i18next';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { createContext, useContext } from 'react';
 import { useLocalStorage } from '../utils/useLocalStorage';
@@ -22,7 +22,7 @@ type I18nContextValue = {
   langKey: LanguageKey;
   setLangKey: (langKey: LanguageKey) => void;
   isReady: boolean;
-  t: TFunction;
+  t: (key: string) => string;
 };
 
 const getLangKey = (): LanguageKey => {

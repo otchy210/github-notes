@@ -60,7 +60,7 @@ export const Header: React.FC<Props> = ({ toggleNavShown }: Props) => {
           <hr />
           <div>
             <Link to="/config?focus=accessToken" onClick={() => setUserPanelShown(false)} className="text">
-              {user ? `${t('Logout')}` : `${t('Login')}`}
+              {user ? t('Logout') : t('Login')}
             </Link>
           </div>
         </div>
