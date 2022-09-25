@@ -19,7 +19,6 @@ exports[`Config matches snapshot 1`] = `
     >
       <div>
         <input
-          placeholder="Search notes"
           value=""
         />
       </div>
@@ -44,17 +43,13 @@ exports[`Config matches snapshot 1`] = `
         <a
           class="text"
           href="/"
-        >
-          Home
-        </a>
+        />
       </li>
       <li>
         <a
           class="text"
           href="/config"
-        >
-          Config
-        </a>
+        />
       </li>
     </ul>
   </nav>

@@ -1,6 +1,10 @@
 {
+  "Config": "設定",
   "English": "英語",
+  "Home": "ホーム",
   "Japanese": "日本語",
   "Login": "ログイン",
-  "Logout": "ログアウト"
+  "Logout": "ログアウト",
+  "Search notes": "メモを検索",
+  "Unknown": "不明"
 }

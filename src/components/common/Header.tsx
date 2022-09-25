@@ -26,7 +26,7 @@ export const Header: React.FC<Props> = ({ toggleNavShown }: Props) => {
       </div>
       <form className="search">
         <div>
-          <input placeholder="Search notes" value={query} onChange={(e) => setQuery(e.target.value)} />
+          <input placeholder={t('Search notes')} value={query} onChange={(e) => setQuery(e.target.value)} />
           {query.length > 0 && (
             <div className="icon close" onClick={() => setQuery('')}>
               <img src="/images/icon-close.svg" />
@@ -44,7 +44,7 @@ export const Header: React.FC<Props> = ({ toggleNavShown }: Props) => {
           <div>
             <div className="avatar">{user ? <img src={user.avatarUrl} /> : <img src="/images/icon-user.svg" />}</div>
           </div>
-          <div>{user ? user.name || user.id : 'Unknown'} </div>
+          <div>{user ? user.name || user.id : t('Unknown')} </div>
           <hr />
           <div>
             <select onChange={(e) => setLangKey(e.target.value as LanguageKey)}>
