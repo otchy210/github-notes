@@ -22,7 +22,7 @@ type I18nContextValue = {
   langKey: LanguageKey;
   setLangKey: (langKey: LanguageKey) => void;
   isReady: boolean;
-  t: (key: string) => string;
+  t: (key: string, dangerousHTML?: boolean) => string;
 };
 
 const getLangKey = (): LanguageKey => {
@@ -42,8 +42,14 @@ const getLangKey = (): LanguageKey => {
   return LANGUAGES[0].key;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const I18nContext = createContext<I18nContextValue>({ langKey: getLangKey(), setLangKey: () => {}, isReady: false, t: i18next.t });
+const I18nContext = createContext<I18nContextValue>({
+  langKey: getLangKey(),
+  setLangKey: () => {
+    throw new Error();
+  },
+  isReady: false,
+  t: i18next.t,
+});
 
 export const useI18n = (): I18nContextValue => {
   return useContext(I18nContext);
@@ -82,7 +88,14 @@ const I18nProvider: React.FC<Props> = ({ children }) => {
         setIsReady(true);
       });
   }, []);
-  return <I18nContext.Provider value={{ langKey, setLangKey, isReady, t: i18next.t }}>{children}</I18nContext.Provider>;
+  const t = (key: string, dangerousHTML = false) => {
+    if (dangerousHTML) {
+      return i18next.t(key, { interpolation: { escapeValue: false } });
+    } else {
+      return i18next.t(key);
+    }
+  };
+  return <I18nContext.Provider value={{ langKey, setLangKey, isReady, t }}>{children}</I18nContext.Provider>;
 };
 
 export default I18nProvider;

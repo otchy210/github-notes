@@ -1,10 +1,14 @@
 {
   "Config": "設定",
+  "Config page": "設定ページ",
+  "Did you create your access token? Set it up here:": "アクセストークンを作成したらここで設定して下さい：",
   "English": "英語",
+  "GitHub Notes is a tool that open source version of Apple Notes or Google Keep which stores notes in your GitHub repository. So it is actually depending on Microsoft but having much better control. All your notes are written as markdown documents.": "GitHub Notes は GitHub レポジトリにメモを保存する、オープンソースバージョンの Apple メモあるいは Google Keep です。したがって、実際の所 Microsoft に依存してはいますが、はるかにオープンに管理されています。また、全てのメモは Markdown で保存されます。",
   "Home": "ホーム",
   "Japanese": "日本語",
   "Login": "ログイン",
   "Logout": "ログアウト",
   "Search notes": "メモを検索",
-  "Unknown": "不明"
+  "Unknown": "不明",
+  "You need to create a personal token via <a href=\"https://github.com/settings/tokens/new\" target=\"_blank\">this page</a> to use this tool. And the access token should have \"repo\" permission which provides full control of private repositories. So you may be worried if this tool does something bad. In that case, you can always check the <a href=\"https://github.com/otchy210/github-notes\" target=\"_blank\"> source code </a> of this tool and confirm there is no problem.": "このツールを使うためには<a href=\"https://github.com/settings/tokens/new\" target=\"_blank\">このページ</a>でアクセストークンを生成する必要があります。またアクセストークンにはレポジトリの操作を全て許可する \"repo\" 権限を持たせて下さい。このツールが何か悪さをするんじゃないかと心配になるかもしれませんが、その場合は、常にこのツールの<a href=\"https://github.com/otchy210/github-notes\" target=\"_blank\">ソースコード</a>を読んで問題無いことを確認出来ます。"
 }
