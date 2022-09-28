@@ -29,14 +29,6 @@ export const DatabaseProvider: React.FC<Props> = ({ children }) => {
       })
       .catch((e) => {
         console.warn(e);
-        // TODO: load actual data
-        for (let i = 1; i <= 3; i++) {
-          client.add({
-            key: `key${i}`,
-            content: `dummy content ${i}`,
-            updatedAt: i,
-          });
-        }
         setClient(client);
       });
   }, [git]);

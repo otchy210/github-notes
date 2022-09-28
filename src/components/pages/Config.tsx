@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useURLSearchParams } from '../../hooks/useURLSearchParams';
 import { useDatabase } from '../../providers/DatabaseProvider';
 import { useGitHub } from '../../providers/GitHubProvider';
+import { useI18n } from '../../providers/I18nProvider';
+import { dangerous } from '../../utils/dangerous';
 import { HeaderAndNav } from '../common/HeaderAndNav';
 
 type RepoStructureStatus = undefined | 'empty' | 'invalid' | 'avaiable' | 'error';
@@ -16,6 +18,7 @@ export const Config: React.FC = () => {
   const [initializingRepo, setInitializingRepo] = useState<boolean>(false);
   const { client: db } = useDatabase();
   const [recreatingIndex, setRecreatingIndex] = useState<boolean>(false);
+  const { t } = useI18n();
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -69,7 +72,7 @@ export const Config: React.FC = () => {
     if (!git) {
       return;
     }
-    const confirmed = window.confirm('Are you sure to initialize the repository? It may override what you have now.');
+    const confirmed = window.confirm(t('Are you sure to initialize the repository? It may override what you have now.'));
     if (!confirmed) {
       return;
     }
@@ -116,88 +119,89 @@ export const Config: React.FC = () => {
     <>
       <HeaderAndNav />
       <main className="config">
-        <h2>GitHub Personal access token</h2>
-        <p>The secret will be stored in your browser so no one except you can check the value.</p>
-        <p>As long as you set the proper access token below, you're logged in.</p>
+        <h2>{t('GitHub Personal access token')}</h2>
+        <p>{t('The secret will be stored in your browser so no one except you can check the value.')}</p>
+        <p>{t("As long as you set the proper access token below, you're logged in.")}</p>
         <input
           type="password"
           value={accessToken}
-          placeholder="Enter your access token"
+          placeholder={t('Enter your access token')}
           onChange={(e) => {
             setAccessToken(e.target.value);
           }}
           ref={accessTokenRef}
         />
-        {accessToken && <p className="info">Remove above token to logout.</p>}
+        {accessToken && <p className="info">{t('Remove above token to logout.')}</p>}
         {user && (
           <>
-            <h2>GitHub repository to store your notes</h2>
-            <p>Your notes will be storead in this repository. It's highly recommended to create a dedicated repository for this purpose.</p>
+            <h2>{t('GitHub repository to store your notes')}</h2>
+            <p>{t("Your notes will be storead in this repository. It's highly recommended to create a dedicated repository for this purpose.")}</p>
             <p>
-              Your access token configured above has to have permissions to read and write this repository. Also, it's recommended to make your repository
-              private. Otherwise, anyone can read your notes.
+              {t(
+                "Your access token configured above has to have permissions to read and write this repository. Also, it's recommended to make your repository private. Otherwise, anyone can read your notes."
+              )}
             </p>
             <input
               type="text"
               value={repoName}
-              placeholder={`ex) git@github.com:${user.login}/github-notes-data.git`}
+              placeholder={`${t('ex) ')}git@github.com:${user.login}/github-notes-data.git`}
               onChange={(e) => {
                 setRepository(e.target.value);
               }}
             />
             {repoStatus === 'invalid' && (
-              <p className="error">
-                Repository should look like{' '}
-                <code>
-                  git@github.com:{'{'}your-login{'}'}/{'{'}your-repo{'}'}.git
-                </code>
-              </p>
+              <p
+                className="error"
+                dangerouslySetInnerHTML={dangerous(t('Repository should look like <code>git@github.com:{your-login}/{your-repo}.git</code>', true))}
+              />
             )}
-            {repoStatus === 'error' && <p className="error">Failed to access the repository.</p>}
-            {repo && !repo.private && <p className="warn">The repogitory is public. So anyone can read your notes.</p>}
+            {repoStatus === 'error' && <p className="error">{t('Failed to access the repository.')}</p>}
+            {repo && !repo.private && <p className="warn">{t('The repogitory is public. So anyone can read your notes.')}</p>}
           </>
         )}
         {repo && (
           <>
-            <h2>Initialize repository</h2>
-            <p>Your repository need some folders to store notes and metadata. So you need to initialize your repository before using it.</p>
-            {repoStructureStatus === 'empty' && <p className="warn">Your repository is not yet initialized. Click following button to initialize it.</p>}
+            <h2>{t('Initialize repository')}</h2>
+            <p>{t('Your repository need some folders to store notes and metadata. So you need to initialize your repository before using it.')}</p>
+            {repoStructureStatus === 'empty' && <p className="warn">{t('Your repository is not yet initialized. Click following button to initialize it.')}</p>}
             {repoStructureStatus === 'invalid' && (
               <p className="error">
+                {t("Your repository has somewhat invalid state. Make sure it's expected then you can click following button to initialize it.")}
                 <a href={repo.htmlUrl} target="_blank">
-                  Your repository
-                </a>{' '}
-                has somewhat invalid state. Make sure it's expected then you can click following button to initialize it.
+                  {t('Check it.')}
+                </a>
               </p>
             )}
             {repoStructureStatus === 'error' && (
               <p className="error">
+                {t(
+                  'Your repository returns an error. You may find the hint in the DevTools console. If the repository is just empty, you need to push initial commit first to start using this repository.'
+                )}
                 <a href={repo.htmlUrl} target="_blank">
-                  Your repository
-                </a>{' '}
-                returns error. You may find the hint in the DevTools console. If the repository is just empty, you need to push initial commit first to start
-                using this repository.
+                  {t('Check it.')}
+                </a>
               </p>
             )}
             {repoStructureStatus === 'avaiable' ? (
-              <p className="info">Your repository is ready to use.</p>
+              <p className="info">{t('Your repository is ready to use.')}</p>
             ) : (
               <button onClick={initializeRepo} disabled={initializingRepo}>
-                {initializingRepo ? 'Processing...' : 'Initialize'}
+                {initializingRepo ? t('Processing...') : t('Initialize')}
               </button>
             )}
           </>
         )}
         {repo && repoStructureStatus === 'avaiable' && (
           <>
-            <h2>Recreate database index</h2>
+            <h2>{t('Recreate database index')}</h2>
             <p>
-              You can recreate database index by pushing following button. You don't need to do this usually because it should be done automatically. But in
-              case your database index is broken due to for example race condition, you can fix the problem by recreating database index.
+              {t(
+                "You can recreate database index by pushing following button. You don't need to do this usually because it should be done automatically. But in case your database index is broken due to for example race condition, you can fix the problem by recreating database index."
+              )}
             </p>
-            <p className="warn">Note that it can take long time based on number of notes</p>
+            <p className="warn">{t('Note that it can take long time based on number of notes')}</p>
             <button onClick={recreateIndex} disabled={recreatingIndex}>
-              {recreatingIndex ? 'Processing...' : 'Recreate index'}
+              {recreatingIndex ? t('Processing...') : t('Recreate index')}
             </button>
           </>
         )}
