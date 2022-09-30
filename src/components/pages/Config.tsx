@@ -55,11 +55,15 @@ export const Config: React.FC = () => {
             setRepoStructureStatus('invalid');
             break;
           case 2:
-            setRepoStructureStatus('avaiable');
-            break;
+            return git.getDb();
           default:
             console.error(`Unknown state: ${data.tree}`);
             setRepoStructureStatus('error');
+        }
+      })
+      .then((db) => {
+        if (db) {
+          setRepoStructureStatus('avaiable');
         }
       })
       .catch((e) => {
@@ -69,7 +73,7 @@ export const Config: React.FC = () => {
   }, [repo]);
 
   const initializeRepo = () => {
-    if (!git) {
+    if (!git || !db) {
       return;
     }
     const confirmed = window.confirm(t('Are you sure to initialize the repository? It may override what you have now.'));
@@ -80,21 +84,26 @@ export const Config: React.FC = () => {
     (async () => {
       const metaReadme = await git.createTextBlob('# DO NOT EDIT THIS FOLDER MANUALLY');
       const notesReadme = await git.createTextBlob('# DO NOT EDIT THIS FOLDER MANUALLY');
-      git
+      let hasError = false;
+      await git
         .pushBlobs('Initialize repo', [
           { blob: metaReadme, path: 'meta/README.md' },
           { blob: notesReadme, path: 'notes/README.md' },
         ])
-        .then(() => {
-          setRepoStructureStatus('avaiable');
-        })
         .catch((e) => {
           console.error(e);
-          setRepoStructureStatus('error');
-        })
-        .finally(() => {
-          setInitializingRepo(false);
+          hasError = true;
         });
+      await git.pushDb(db.export()).catch((e) => {
+        console.error(e);
+        hasError = true;
+      });
+      if (hasError) {
+        setRepoStructureStatus('error');
+      } else {
+        setRepoStructureStatus('avaiable');
+      }
+      setInitializingRepo(false);
     })();
   };
   const recreateIndex = async () => {
