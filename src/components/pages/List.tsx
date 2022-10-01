@@ -59,7 +59,7 @@ export const List: React.FC = () => {
     <div className="list">
       {drafts.length > 0 && query.length === 0 && (
         <>
-          <h2>Draft</h2>
+          <h2>{t('Draft')}</h2>
           <ul>
             {drafts.map((note) => (
               <ListItem note={note} isDraft={true} isDisabled={false} remove={removeDraft} key={note.key} />
@@ -69,9 +69,7 @@ export const List: React.FC = () => {
       )}
       {notes.length > 0 && (
         <>
-          <h2>
-            Notes<small style={{ color: 'red' }}></small>
-          </h2>
+          <h2>{t('Notes')}</h2>
           <ul>
             {notes.map((note) => (
               <ListItem note={note} isDraft={false} isDisabled={draftKeys.has(note.key)} remove={removeNote} key={note.key} />
