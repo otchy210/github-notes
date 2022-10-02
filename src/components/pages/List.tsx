@@ -77,6 +77,14 @@ export const List: React.FC = () => {
           </ul>
         </>
       )}
+      {drafts.length === 0 && notes.length === 0 && (
+        <div className="instruction">
+          <div>
+            {t('Add new notes!')}
+            <br />▼
+          </div>
+        </div>
+      )}
       <NewNote />
     </div>
   );

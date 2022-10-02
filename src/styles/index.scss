@@ -287,4 +287,15 @@ main {
       }
     }
   }
+  .instruction {
+    display: flex;
+    justify-content: right;
+    align-items: flex-end;
+    width: calc(100% - 16px);
+    height: calc(100% - $header-size - 80px);
+    & > div {
+      font-size: 2rem;
+      text-align: right;
+    }
+  }
 }
