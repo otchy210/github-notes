@@ -3,6 +3,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { createContext, useContext } from 'react';
 import { useLocalStorage } from '../utils/useLocalStorage';
 import HttpApi from 'i18next-http-backend';
+import { useNonReactURLSearchParams } from '../hooks/useURLSearchParams';
 
 export type LanguageKey = 'en' | 'ja';
 
@@ -26,7 +27,14 @@ type I18nContextValue = {
 };
 
 const getLangKey = (): LanguageKey => {
+  const params = useNonReactURLSearchParams();
   const ls = useLocalStorage();
+  const hl = params.get('hl');
+  const validHl = LANGUAGES.filter((lang) => lang.key === hl).map((lang) => lang.key)[0];
+  if (validHl) {
+    ls.set('languageKey', validHl);
+    return validHl;
+  }
   const storedKey = ls.get('languageKey', '');
   if (storedKey.length > 0) {
     return storedKey as LanguageKey;
