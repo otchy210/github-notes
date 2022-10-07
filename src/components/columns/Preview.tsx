@@ -60,9 +60,9 @@ export const Preview: React.FC = () => {
           )}
         </div>
       </header>
-      <main>
+      <article>
         <Render text={draft} />
-      </main>
+      </article>
     </>
   );
 };

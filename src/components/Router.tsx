@@ -2,11 +2,11 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { HashRouter } from 'react-router-dom';
 import { useI18n } from '../providers/I18nProvider';
-import { Config } from './pages/Config';
-import { Edit } from './pages/Edit';
-import { Home } from './pages/Home';
-import { Preview } from './pages/Preview';
-import { View } from './pages/View';
+import { Config } from './columns/Config';
+import { Edit } from './columns/Edit';
+import { Home } from './columns/Home';
+import { Preview } from './columns/Preview';
+import { View } from './columns/View';
 
 export const Router: React.FC = () => {
   const { isReady } = useI18n();

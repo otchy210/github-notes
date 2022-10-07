@@ -81,11 +81,11 @@ export const Edit: React.FC = () => {
           </Link>
         </div>
       </header>
-      <main>
+      <article>
         <div className="editor">
           <textarea ref={textareaRef}></textarea>
         </div>
-      </main>
+      </article>
     </>
   );
 };

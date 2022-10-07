@@ -9,7 +9,7 @@ export const Home: React.FC = () => {
   return (
     <>
       <HeaderAndNav />
-      <main className="home">
+      <article className="home">
         {repoStatus === 'unknown' ? (
           <div className="icon loading">
             <img src="/images/icon-circle.svg" />
@@ -19,7 +19,7 @@ export const Home: React.FC = () => {
         ) : (
           <Guide />
         )}
-      </main>
+      </article>
     </>
   );
 };

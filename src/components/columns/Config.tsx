@@ -127,7 +127,7 @@ export const Config: React.FC = () => {
   return (
     <>
       <HeaderAndNav />
-      <main className="config">
+      <article className="config">
         <h2>{t('GitHub Personal access token')}</h2>
         <p>{t('The secret will be stored in your browser so no one except you can check the value.')}</p>
         <p>{t("As long as you set the proper access token below, you're logged in.")}</p>
@@ -214,7 +214,7 @@ export const Config: React.FC = () => {
             </button>
           </>
         )}
-      </main>
+      </article>
     </>
   );
 };

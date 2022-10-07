@@ -43,7 +43,7 @@ export const View: React.FC = () => {
           </div>
         </div>
       </header>
-      <main>{note ? <Render text={note.content} /> : `Note not found: ${key}`}</main>
+      <article>{note ? <Render text={note.content} /> : `Note not found: ${key}`}</article>
     </>
   );
 };
