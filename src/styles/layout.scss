@@ -1,13 +1,55 @@
+@mixin mq-2cols() {
+  @media screen and (min-width: 720px) {
+    @content;
+  }
+}
+
+@mixin mq-3cols() {
+  @media screen and (min-width: 1000px) {
+    @content;
+  }
+}
+
+@mixin mq-xl() {
+  @media screen and (min-width: 1200px) {
+    @content;
+  }
+}
+
+body {
+  background-image: url(/images/bg-image.png);
+}
+
 .page {
   position: absolute;
+  display: flex;
   width: 100vw;
   height: 100vh;
   top: 0;
 
   .column {
-    position: absolute;
     width: 100vw;
     height: 100vh;
     top: 0;
+    display: none;
+    background-color: $background-color;
+    box-shadow: -1px 0 0 $border-color, 1px 0 0 $border-color;
+    &:nth-last-child(1) {
+      display: block;
+    }
+    @include mq-2cols() {
+      width: 50vw;
+      &:nth-last-child(1),
+      &:nth-last-child(2) {
+        display: block;
+      }
+    }
+    header {
+      width: 100vw;
+      box-shadow: -1px 0 0 $border-color, 1px 0 0 $border-color;
+      @include mq-2cols() {
+        width: 50vw;
+      }
+    }
   }
 }

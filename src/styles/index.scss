@@ -89,11 +89,11 @@ header {
   display: flex;
   justify-content: space-between;
   position: fixed;
-  width: 100vw;
   height: $header-size;
   top: 0;
   border-bottom: $border;
   background-color: $background-color;
+  z-index: 3;
   .icon-holder {
     flex-basis: $header-size;
     padding: $space-2;
@@ -160,6 +160,7 @@ nav {
   background-color: $background-color;
   box-shadow: 4px 16px 16px $ht-black;
   transition: left 200ms;
+  z-index: 2;
   & ul {
     margin: 0;
   }
@@ -177,7 +178,11 @@ nav {
 }
 
 article {
-  margin: calc($header-size + $space-2) $space-2 $space-2 $space-2;
+  padding: calc($header-size + $space-2) $space-2 $space-2 $space-2;
+  height: 100vh;
+  position: relative;
+  overflow: auto;
+  z-index: 1;
   .new-note {
     position: absolute;
     right: $space-4;
@@ -219,7 +224,7 @@ article {
       a {
         display: block;
         text-decoration: none;
-        width: calc(100vw - $space-4 - $icon-width);
+        width: calc(100% - $space-4 - $icon-width);
         h3,
         small {
           display: block;
