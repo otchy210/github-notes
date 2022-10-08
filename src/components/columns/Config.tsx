@@ -6,6 +6,7 @@ import { useGitHub } from '../../providers/GitHubProvider';
 import { useI18n } from '../../providers/I18nProvider';
 import { dangerous } from '../../utils/dangerous';
 import { HeaderAndNav } from '../common/HeaderAndNav';
+import { Column } from './Column';
 
 type RepoStructureStatus = undefined | 'empty' | 'invalid' | 'avaiable' | 'error';
 
@@ -125,7 +126,7 @@ export const Config: React.FC = () => {
     setRecreatingIndex(false);
   };
   return (
-    <>
+    <Column>
       <HeaderAndNav />
       <article className="config">
         <h2>{t('GitHub Personal access token')}</h2>
@@ -215,6 +216,6 @@ export const Config: React.FC = () => {
           </>
         )}
       </article>
-    </>
+    </Column>
   );
 };

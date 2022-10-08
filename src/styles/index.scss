@@ -1,9 +1,10 @@
 @use 'sass:math';
 
 @import './reset.scss';
-//@import './reset.css';
 
 @import './variables.scss';
+
+@import './layout.scss';
 
 .home,
 .config {
@@ -90,7 +91,6 @@ header {
   position: fixed;
   width: 100vw;
   height: $header-size;
-  left: 0;
   top: 0;
   border-bottom: $border;
   background-color: $background-color;
@@ -188,6 +188,7 @@ article {
     border: $border;
     border-radius: 50%;
     box-shadow: $box-shadow;
+    background-color: $background-color;
     img {
       width: 80%;
       margin-left: 10%;

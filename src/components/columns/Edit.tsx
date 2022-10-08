@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useURLSearchParams } from '../../hooks/useURLSearchParams';
 import { useLocalStorage } from '../../utils/useLocalStorage';
+import { Column } from './Column';
 
 const createNewKey = () => {
   const now = Date.now();
@@ -64,7 +65,7 @@ export const Edit: React.FC = () => {
   }, [key]);
 
   return (
-    <>
+    <Column>
       <header>
         <div className="icon-holder">
           <Link to="/">
@@ -86,6 +87,6 @@ export const Edit: React.FC = () => {
           <textarea ref={textareaRef}></textarea>
         </div>
       </article>
-    </>
+    </Column>
   );
 };

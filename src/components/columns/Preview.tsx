@@ -5,6 +5,7 @@ import { useDatabase } from '../../providers/DatabaseProvider';
 import { useGitHub } from '../../providers/GitHubProvider';
 import { useLocalStorage } from '../../utils/useLocalStorage';
 import { Render } from '../common/Render';
+import { Column } from './Column';
 
 export const Preview: React.FC = () => {
   const [saving, setSaving] = useState<boolean>(false);
@@ -39,7 +40,7 @@ export const Preview: React.FC = () => {
     navigate('/');
   };
   return (
-    <>
+    <Column>
       <header>
         <div className="icon-holder">
           <Link to={`/edit?key=${key}`}>
@@ -63,6 +64,6 @@ export const Preview: React.FC = () => {
       <article>
         <Render text={draft} />
       </article>
-    </>
+    </Column>
   );
 };

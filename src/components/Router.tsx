@@ -2,11 +2,11 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { HashRouter } from 'react-router-dom';
 import { useI18n } from '../providers/I18nProvider';
-import { Config } from './columns/Config';
 import { Edit } from './columns/Edit';
-import { Home } from './columns/Home';
 import { Preview } from './columns/Preview';
 import { View } from './columns/View';
+import { ConfigPage } from './pages/ConfigPage';
+import { HomePage } from './pages/HomePage';
 
 export const Router: React.FC = () => {
   const { isReady } = useI18n();
@@ -16,8 +16,8 @@ export const Router: React.FC = () => {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/config" element={<Config />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/config" element={<ConfigPage />} />
         <Route path="/edit" element={<Edit />} />
         <Route path="/preview" element={<Preview />} />
         <Route path="/view" element={<View />} />

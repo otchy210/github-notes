@@ -2,67 +2,71 @@
 
 exports[`Config matches snapshot 1`] = `
 <DocumentFragment>
-  <header>
-    <div
-      class="icon-holder"
-    >
-      <div
-        class="icon menu"
-      >
-        <img
-          src="/images/icon-menu.svg"
-        />
-      </div>
-    </div>
-    <form
-      class="search"
-    >
-      <div>
-        <input
-          value=""
-        />
-      </div>
-    </form>
-    <div
-      class="icon-holder"
-    >
-      <div
-        class="icon user"
-      >
-        <img
-          src="/images/icon-user.svg"
-        />
-      </div>
-    </div>
-  </header>
-  <nav
-    style="left: -100%;"
+  <div
+    class="column"
   >
-    <ul>
-      <li>
-        <a
-          class="text"
-          href="/"
-        />
-      </li>
-      <li>
-        <a
-          class="text"
-          href="/config"
-        />
-      </li>
-    </ul>
-  </nav>
-  <article
-    class="config"
-  >
-    <h2 />
-    <p />
-    <p />
-    <input
-      type="password"
-      value=""
-    />
-  </article>
+    <header>
+      <div
+        class="icon-holder"
+      >
+        <div
+          class="icon menu"
+        >
+          <img
+            src="/images/icon-menu.svg"
+          />
+        </div>
+      </div>
+      <form
+        class="search"
+      >
+        <div>
+          <input
+            value=""
+          />
+        </div>
+      </form>
+      <div
+        class="icon-holder"
+      >
+        <div
+          class="icon user"
+        >
+          <img
+            src="/images/icon-user.svg"
+          />
+        </div>
+      </div>
+    </header>
+    <nav
+      style="left: -100%;"
+    >
+      <ul>
+        <li>
+          <a
+            class="text"
+            href="/"
+          />
+        </li>
+        <li>
+          <a
+            class="text"
+            href="/config"
+          />
+        </li>
+      </ul>
+    </nav>
+    <article
+      class="config"
+    >
+      <h2 />
+      <p />
+      <p />
+      <input
+        type="password"
+        value=""
+      />
+    </article>
+  </div>
 </DocumentFragment>
 `;

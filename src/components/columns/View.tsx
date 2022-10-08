@@ -4,6 +4,7 @@ import { useURLSearchParams } from '../../hooks/useURLSearchParams';
 import { useDatabase } from '../../providers/DatabaseProvider';
 import { useLocalStorage } from '../../utils/useLocalStorage';
 import { Render } from '../common/Render';
+import { Column } from './Column';
 
 export const View: React.FC = () => {
   const params = useURLSearchParams();
@@ -28,7 +29,7 @@ export const View: React.FC = () => {
     navigate(`/edit?key=${key}`);
   };
   return (
-    <>
+    <Column>
       <header>
         <div className="icon-holder">
           <Link to={'/'}>
@@ -44,6 +45,6 @@ export const View: React.FC = () => {
         </div>
       </header>
       <article>{note ? <Render text={note.content} /> : `Note not found: ${key}`}</article>
-    </>
+    </Column>
   );
 };
