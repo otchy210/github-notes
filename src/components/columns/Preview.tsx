@@ -5,9 +5,13 @@ import { useDatabase } from '../../providers/DatabaseProvider';
 import { useGitHub } from '../../providers/GitHubProvider';
 import { useLocalStorage } from '../../utils/useLocalStorage';
 import { Render } from '../common/Render';
-import { Column } from './Column';
+import { Column, Priority } from './Column';
 
-export const Preview: React.FC = () => {
+type Props = {
+  priority: Priority;
+};
+
+export const Preview: React.FC<Props> = ({ priority }) => {
   const [saving, setSaving] = useState<boolean>(false);
   const params = useURLSearchParams();
   const { client: git } = useGitHub();
@@ -40,7 +44,7 @@ export const Preview: React.FC = () => {
     navigate('/');
   };
   return (
-    <Column>
+    <Column {...{ priority }}>
       <header>
         <div className="icon-holder">
           <Link to={`/edit?key=${key}`}>

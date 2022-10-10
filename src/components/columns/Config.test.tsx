@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 describe('Config', () => {
   it('matches snapshot', () => {
-    const { asFragment } = render(<Config />, { wrapper: MemoryRouter });
+    const { asFragment } = render(<Config priority={1} />, { wrapper: MemoryRouter });
     expect(asFragment()).toMatchSnapshot();
   });
 });

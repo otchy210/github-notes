@@ -1,3 +1,6 @@
+$max-page-width: 1440px;
+$max-col-width: math.div(1440px, 3);
+
 @mixin mq-2cols() {
   @media screen and (min-width: 720px) {
     @content;
@@ -5,13 +8,13 @@
 }
 
 @mixin mq-3cols() {
-  @media screen and (min-width: 1000px) {
+  @media screen and (min-width: 1080px) {
     @content;
   }
 }
 
-@mixin mq-xl() {
-  @media screen and (min-width: 1200px) {
+@mixin mq-max() {
+  @media screen and (min-width: $max-page-width) {
     @content;
   }
 }
@@ -27,6 +30,11 @@ body {
   height: 100vh;
   top: 0;
 
+  @include mq-max() {
+    width: $max-page-width;
+    left: calc((100vw - $max-page-width) / 2);
+  }
+
   .column {
     width: 100vw;
     height: 100vh;
@@ -34,21 +42,34 @@ body {
     display: none;
     background-color: $background-color;
     box-shadow: -1px 0 0 $border-color, 1px 0 0 $border-color;
-    &:nth-last-child(1) {
+    &.prio-1 {
       display: block;
     }
     @include mq-2cols() {
       width: 50vw;
-      &:nth-last-child(1),
-      &:nth-last-child(2) {
+      &.prio-1,
+      &.prio-2 {
         display: block;
       }
+    }
+    @include mq-3cols() {
+      width: 33.3333vw;
+      display: block;
+    }
+    @include mq-max() {
+      width: $max-col-width;
     }
     header {
       width: 100vw;
       box-shadow: -1px 0 0 $border-color, 1px 0 0 $border-color;
       @include mq-2cols() {
         width: 50vw;
+      }
+      @include mq-3cols() {
+        width: 33.3333vw;
+      }
+      @include mq-max() {
+        width: $max-col-width;
       }
     }
   }

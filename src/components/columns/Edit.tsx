@@ -1,50 +1,22 @@
 import React, { useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useURLSearchParams } from '../../hooks/useURLSearchParams';
+import { Link } from 'react-router-dom';
 import { useLocalStorage } from '../../utils/useLocalStorage';
-import { Column } from './Column';
+import { Column, Priority } from './Column';
 
-const createNewKey = () => {
-  const now = Date.now();
-  const intArr = [];
-  for (let i = 3; i >= 0; i--) {
-    const shift = i * 8;
-    const mask = 0xff << shift;
-    const num = (mask & now) >> shift;
-    intArr.push(num);
-  }
-  const randInt = Math.trunc(Math.random() * 0xffffffffffff);
-  for (let i = 7; i >= 0; i--) {
-    const shift = i * 8;
-    const mask = 0xff << shift;
-    const num = (mask & randInt) >> shift;
-    intArr.push(num);
-  }
-  const uint8Array = new Uint8Array(intArr);
-  return window
-    .btoa(String.fromCharCode.apply(null, Array.from(uint8Array)))
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/g, '');
+type Props = {
+  key: string;
+  priority: Priority;
 };
 
-export const Edit: React.FC = () => {
+export const Edit: React.FC<Props> = ({ key, priority }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const params = useURLSearchParams();
-  const key = params.get('key');
   const localStorage = useLocalStorage();
 
-  const navigate = useNavigate();
   useEffect(() => {
-    if (key) {
-      const draft = localStorage.getDraft(key);
-      if (textareaRef.current) {
-        textareaRef.current.value = draft;
-      }
-      return;
+    const draft = localStorage.getDraft(key);
+    if (textareaRef.current) {
+      textareaRef.current.value = draft;
     }
-    const newKey = createNewKey();
-    navigate(`/edit?key=${newKey}`, { replace: true });
   }, [key]);
 
   useEffect(() => {
@@ -65,7 +37,7 @@ export const Edit: React.FC = () => {
   }, [key]);
 
   return (
-    <Column>
+    <Column {...{ priority }}>
       <header>
         <div className="icon-holder">
           <Link to="/">

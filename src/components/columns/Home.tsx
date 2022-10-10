@@ -1,14 +1,18 @@
 import React from 'react';
 import { useGitHub } from '../../providers/GitHubProvider';
 import { HeaderAndNav } from '../common/HeaderAndNav';
-import { Column } from './Column';
+import { Column, Priority } from './Column';
 import { List } from '../contents/List';
 import { Guide } from '../contents/Guide';
 
-export const Home: React.FC = () => {
+type Props = {
+  priority: Priority;
+};
+
+export const Home: React.FC<Props> = ({ priority }) => {
   const { repoStatus, client } = useGitHub();
   return (
-    <Column>
+    <Column {...{ priority }}>
       <HeaderAndNav />
       <article className="home">
         {repoStatus === 'unknown' ? (

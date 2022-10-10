@@ -4,9 +4,13 @@ import { useURLSearchParams } from '../../hooks/useURLSearchParams';
 import { useDatabase } from '../../providers/DatabaseProvider';
 import { useLocalStorage } from '../../utils/useLocalStorage';
 import { Render } from '../common/Render';
-import { Column } from './Column';
+import { Column, Priority } from './Column';
 
-export const View: React.FC = () => {
+type Props = {
+  priority: Priority;
+};
+
+export const View: React.FC<Props> = ({ priority }) => {
   const params = useURLSearchParams();
   const key = params.get('key');
   if (!key) {
@@ -29,7 +33,7 @@ export const View: React.FC = () => {
     navigate(`/edit?key=${key}`);
   };
   return (
-    <Column>
+    <Column {...{ priority }}>
       <header>
         <div className="icon-holder">
           <Link to={'/'}>

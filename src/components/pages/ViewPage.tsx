@@ -6,8 +6,8 @@ import { Page } from './Page';
 export const ViewPage: React.FC = () => {
   return (
     <Page>
-      <Home />
-      <View />
+      <Home priority={2} />
+      <View priority={1} />
     </Page>
   );
 };

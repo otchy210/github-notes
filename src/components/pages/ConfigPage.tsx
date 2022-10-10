@@ -5,7 +5,7 @@ import { Page } from './Page';
 export const ConfigPage: React.FC = () => {
   return (
     <Page>
-      <Config />
+      <Config priority={1} />
     </Page>
   );
 };
