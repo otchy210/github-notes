@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Edit } from '../columns/Edit';
 import { Home } from '../columns/Home';
 import { Preview } from '../columns/Preview';
 import { Page } from './Page';
 import { useURLSearchParams } from '../../hooks/useURLSearchParams';
 import { useNavigate } from 'react-router-dom';
+import { useLocalStorage } from '../../utils/useLocalStorage';
 
 const createNewKey = () => {
   const now = Date.now();
@@ -38,11 +39,14 @@ type Props = {
 
 export const EditPage: React.FC<Props> = ({ mode }) => {
   const [key, setKey] = useState<string>();
+  const [note, setNoteState] = useState<string>('');
   const params = useURLSearchParams();
+  const paramKey = params.get('key');
   const navigate = useNavigate();
+  const localStorage = useLocalStorage();
+  const tidRef = useRef<number>(0);
 
   useEffect(() => {
-    const paramKey = params.get('key');
     if (paramKey) {
       setKey(paramKey);
     } else {
@@ -50,17 +54,33 @@ export const EditPage: React.FC<Props> = ({ mode }) => {
       navigate(`/edit?key=${newKey}`, { replace: true });
       setKey(createNewKey());
     }
-  }, []);
+  }, [paramKey]);
+
+  useEffect(() => {
+    if (!key) {
+      return;
+    }
+    const draft = localStorage.getDraft(key);
+    setNoteState(draft);
+  }, [key]);
 
   if (!key) {
     return null;
   }
 
+  const setNote = (note: string) => {
+    setNoteState(note);
+    window.clearTimeout(tidRef.current);
+    tidRef.current = window.setTimeout(() => {
+      localStorage.setDraft(key, note);
+    }, 500);
+  };
+
   return (
     <Page>
       <Home priority={3} />
-      <Edit {...{ key, priority: mode === 'edit' ? 1 : 2 }} />
-      <Preview priority={mode === 'preview' ? 1 : 2} />
+      <Edit key={key} priority={mode === 'edit' ? 1 : 2} note={note} onChange={setNote} />
+      <Preview key={key} priority={mode === 'preview' ? 1 : 2} note={note} />
     </Page>
   );
 };

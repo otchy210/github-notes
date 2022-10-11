@@ -1,40 +1,21 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { useLocalStorage } from '../../utils/useLocalStorage';
 import { Column, Priority } from './Column';
 
 type Props = {
   key: string;
   priority: Priority;
+  note: string;
+  onChange: (note: string) => void;
 };
 
-export const Edit: React.FC<Props> = ({ key, priority }) => {
+export const Edit: React.FC<Props> = ({ key, priority, note, onChange }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const localStorage = useLocalStorage();
-
   useEffect(() => {
-    const draft = localStorage.getDraft(key);
-    if (textareaRef.current) {
-      textareaRef.current.value = draft;
+    if (priority === 1) {
+      textareaRef.current?.focus();
     }
-  }, [key]);
-
-  useEffect(() => {
-    textareaRef.current?.focus();
-    let prevDraft = textareaRef.current?.value;
-    const tid = window.setInterval(() => {
-      if (textareaRef.current && key) {
-        const draft = textareaRef.current.value;
-        if (draft !== prevDraft) {
-          localStorage.setDraft(key, draft);
-        }
-        prevDraft = draft;
-      }
-    }, 500);
-    return () => {
-      clearInterval(tid);
-    };
-  }, [key]);
+  }, []);
 
   return (
     <Column {...{ priority }}>
@@ -56,7 +37,7 @@ export const Edit: React.FC<Props> = ({ key, priority }) => {
       </header>
       <article>
         <div className="editor">
-          <textarea ref={textareaRef}></textarea>
+          <textarea ref={textareaRef} value={note} onChange={(e) => onChange(e.target.value)} />
         </div>
       </article>
     </Column>
