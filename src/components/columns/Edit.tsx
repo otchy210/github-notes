@@ -3,19 +3,19 @@ import { Link } from 'react-router-dom';
 import { Column, Priority } from './Column';
 
 type Props = {
-  key: string;
+  noteKey: string;
   priority: Priority;
   note: string;
   onChange: (note: string) => void;
 };
 
-export const Edit: React.FC<Props> = ({ key, priority, note, onChange }) => {
+export const Edit: React.FC<Props> = ({ noteKey, priority, note, onChange }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     if (priority === 1) {
       textareaRef.current?.focus();
     }
-  }, []);
+  }, [noteKey]);
 
   return (
     <Column {...{ priority }}>
@@ -28,7 +28,7 @@ export const Edit: React.FC<Props> = ({ key, priority, note, onChange }) => {
           </Link>
         </div>
         <div className="icon-holder">
-          <Link to={`/preview?key=${key}`}>
+          <Link to={`/preview?key=${noteKey}`}>
             <div className="icon">
               <img src="/images/icon-preview.svg" />
             </div>

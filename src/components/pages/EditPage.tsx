@@ -79,8 +79,8 @@ export const EditPage: React.FC<Props> = ({ mode }) => {
   return (
     <Page>
       <Home priority={3} />
-      <Edit key={key} priority={mode === 'edit' ? 1 : 2} note={note} onChange={setNote} />
-      <Preview key={key} priority={mode === 'preview' ? 1 : 2} note={note} />
+      <Edit noteKey={key} priority={mode === 'edit' ? 1 : 2} note={note} onChange={setNote} />
+      <Preview noteKey={key} priority={mode === 'preview' ? 1 : 2} note={note} />
     </Page>
   );
 };

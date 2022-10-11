@@ -7,12 +7,12 @@ import { Render } from '../common/Render';
 import { Column, Priority } from './Column';
 
 type Props = {
-  key: string;
+  noteKey: string;
   priority: Priority;
   note: string;
 };
 
-export const Preview: React.FC<Props> = ({ key, priority, note }) => {
+export const Preview: React.FC<Props> = ({ noteKey, priority, note }) => {
   const [saving, setSaving] = useState<boolean>(false);
   const { client: git } = useGitHub();
   const { client: db } = useDatabase();
@@ -28,11 +28,11 @@ export const Preview: React.FC<Props> = ({ key, priority, note }) => {
   const navigate = useNavigate();
   const save = async () => {
     setSaving(true);
-    await git.pushNote(key, note);
-    localStorage.removeDraft(key);
+    await git.pushNote(noteKey, note);
+    localStorage.removeDraft(noteKey);
     const latestDb = await git.getDb();
     db.import(latestDb);
-    db.addOrUpdate({ key, content: note, updatedAt: Date.now() });
+    db.addOrUpdate({ key: noteKey, content: note, updatedAt: Date.now() });
     await git.pushDb(db.export());
     setSaving(false);
     navigate('/');
@@ -41,7 +41,7 @@ export const Preview: React.FC<Props> = ({ key, priority, note }) => {
     <Column {...{ priority }}>
       <header>
         <div className="icon-holder">
-          <Link to={`/edit?key=${key}`}>
+          <Link to={`/edit?key=${noteKey}`}>
             <div className="icon">
               <img src="/images/icon-back.svg" />
             </div>
