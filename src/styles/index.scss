@@ -203,7 +203,7 @@ article {
   }
   .editor {
     textarea {
-      height: calc(100vh - $header-size - $space-4);
+      height: calc(100vh - $header-size - $space-4 - $space-3);
       resize: none;
     }
   }
