@@ -12,9 +12,15 @@ type Props = {
 export const Edit: React.FC<Props> = ({ noteKey, priority, note, onChange }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
-    if (priority === 1) {
-      textareaRef.current?.focus();
+    if (priority !== 1 || !textareaRef.current) {
+      return;
     }
+    const textarea = textareaRef.current;
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(0, 0);
+      textarea.scrollTop = 0;
+    }, 0);
   }, [noteKey]);
 
   return (
