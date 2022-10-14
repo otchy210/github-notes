@@ -85,7 +85,6 @@ textarea {
   outline-color: $border-color;
   border-style: solid;
   border-width: 1px;
-  border-color: transparent transparent $border-color transparent;
   font-size: 1rem;
   line-height: 1.2em;
 
@@ -95,6 +94,13 @@ textarea {
     transition: outline-offset 145ms cubic-bezier(0.25, 0, 0.4, 1);
     transition-duration: 0.25s;
   }
+}
+input {
+  border-color: transparent transparent $border-color transparent;
+}
+textarea {
+  border-color: $border-color;
+  border-radius: 2px;
 }
 
 button {
