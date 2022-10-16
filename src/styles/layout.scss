@@ -19,6 +19,12 @@ $max-col-width: math.div(1440px, 3);
   }
 }
 
+.hide-2cols {
+  @include mq-2cols() {
+    display: none;
+  }
+}
+
 body {
   background-image: url(/images/bg-image.png);
 }
@@ -70,6 +76,13 @@ body {
       }
       @include mq-max() {
         width: $max-col-width;
+      }
+    }
+    &:last-child {
+      header {
+        @include mq-2cols() {
+          justify-content: flex-end;
+        }
       }
     }
   }

@@ -33,7 +33,7 @@ export const Edit: React.FC<Props> = ({ noteKey, priority, note, onChange }) => 
             </div>
           </Link>
         </div>
-        <div className="icon-holder">
+        <div className="icon-holder hide-2cols">
           <Link to={`/preview?key=${noteKey}`}>
             <div className="icon">
               <img src="/images/icon-preview.svg" />

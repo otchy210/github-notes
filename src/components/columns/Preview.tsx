@@ -40,7 +40,7 @@ export const Preview: React.FC<Props> = ({ noteKey, priority, note }) => {
   return (
     <Column {...{ priority }}>
       <header>
-        <div className="icon-holder">
+        <div className="icon-holder hide-2cols">
           <Link to={`/edit?key=${noteKey}`}>
             <div className="icon">
               <img src="/images/icon-back.svg" />
