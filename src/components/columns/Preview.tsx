@@ -10,9 +10,10 @@ type Props = {
   noteKey: string;
   priority: Priority;
   note: string;
+  scrollRatio: number;
 };
 
-export const Preview: React.FC<Props> = ({ noteKey, priority, note }) => {
+export const Preview: React.FC<Props> = ({ noteKey, priority, note, scrollRatio }) => {
   const [saving, setSaving] = useState<boolean>(false);
   const { client: git } = useGitHub();
   const { client: db } = useDatabase();
@@ -60,7 +61,7 @@ export const Preview: React.FC<Props> = ({ noteKey, priority, note }) => {
         </div>
       </header>
       <article>
-        <Render text={note} />
+        <Render text={note} scrollRatio={scrollRatio} />
       </article>
     </Column>
   );

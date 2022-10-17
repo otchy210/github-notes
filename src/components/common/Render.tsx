@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSearchQuery } from '../../providers/SearchQueryProvider';
 import { useMarkdown } from '../../utils/useMarkDown';
 
 type Props = {
   text: string;
+  scrollRatio?: number;
 };
 
 const highlight = (html: string, query: string) => {
@@ -34,11 +35,20 @@ const highlight = (html: string, query: string) => {
   return root.innerHTML;
 };
 
-export const Render: React.FC<Props> = ({ text }) => {
+export const Render: React.FC<Props> = ({ text, scrollRatio }) => {
+  const rendererRef = useRef<HTMLDivElement>(null);
   const md = useMarkdown();
   const renderedHTML = md.render(text);
   const { query } = useSearchQuery();
   const highlightedHTML = query ? highlight(renderedHTML, query) : renderedHTML;
 
-  return <div className="render" dangerouslySetInnerHTML={{ __html: highlightedHTML }}></div>;
+  useEffect(() => {
+    const renderer = rendererRef.current;
+    if (!renderer || !scrollRatio) {
+      return;
+    }
+    renderer.scrollTop = (renderer.scrollHeight - renderer.clientHeight) * scrollRatio;
+  }, [scrollRatio]);
+
+  return <div ref={rendererRef} className="renderer" dangerouslySetInnerHTML={{ __html: highlightedHTML }}></div>;
 };

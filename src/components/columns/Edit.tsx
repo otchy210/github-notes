@@ -7,9 +7,10 @@ type Props = {
   priority: Priority;
   note: string;
   onChange: (note: string) => void;
+  setScrollRatio: (scrollRatio: number) => void;
 };
 
-export const Edit: React.FC<Props> = ({ noteKey, priority, note, onChange }) => {
+export const Edit: React.FC<Props> = ({ noteKey, priority, note, onChange, setScrollRatio }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     if (priority !== 1 || !textareaRef.current) {
@@ -22,6 +23,12 @@ export const Edit: React.FC<Props> = ({ noteKey, priority, note, onChange }) => 
       textarea.scrollTop = 0;
     }, 0);
   }, [noteKey]);
+
+  const onScroll = (e: React.UIEvent<HTMLTextAreaElement>) => {
+    const textarea = e.target as HTMLTextAreaElement;
+    const ratio = textarea.scrollTop / (textarea.scrollHeight - textarea.clientHeight);
+    setScrollRatio(ratio);
+  };
 
   return (
     <Column {...{ priority }}>
@@ -43,7 +50,7 @@ export const Edit: React.FC<Props> = ({ noteKey, priority, note, onChange }) => 
       </header>
       <article>
         <div className="editor">
-          <textarea ref={textareaRef} value={note} onChange={(e) => onChange(e.target.value)} />
+          <textarea ref={textareaRef} value={note} onChange={(e) => onChange(e.target.value)} onScroll={onScroll} />
         </div>
       </article>
     </Column>

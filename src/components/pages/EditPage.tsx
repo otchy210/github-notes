@@ -40,6 +40,7 @@ type Props = {
 export const EditPage: React.FC<Props> = ({ mode }) => {
   const [key, setKey] = useState<string>();
   const [note, setNoteState] = useState<string>('');
+  const [scrollRatio, setScrollRatio] = useState<number>(0);
   const params = useURLSearchParams();
   const paramKey = params.get('key');
   const navigate = useNavigate();
@@ -79,8 +80,8 @@ export const EditPage: React.FC<Props> = ({ mode }) => {
   return (
     <Page>
       <Home priority={3} />
-      <Edit noteKey={key} priority={mode === 'edit' ? 1 : 2} note={note} onChange={setNote} />
-      <Preview noteKey={key} priority={mode === 'preview' ? 1 : 2} note={note} />
+      <Edit noteKey={key} priority={mode === 'edit' ? 1 : 2} onChange={setNote} {...{ note, setScrollRatio }} />
+      <Preview noteKey={key} priority={mode === 'preview' ? 1 : 2} {...{ note, scrollRatio }} />
     </Page>
   );
 };
