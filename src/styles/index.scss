@@ -207,6 +207,10 @@ article {
       resize: none;
     }
   }
+  .render {
+    height: calc(100vh - $header-size - $space-4 - $space-3);
+    overflow: auto;
+  }
   .list {
     h2 {
       border-bottom: $border;

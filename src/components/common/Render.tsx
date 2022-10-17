@@ -40,5 +40,5 @@ export const Render: React.FC<Props> = ({ text }) => {
   const { query } = useSearchQuery();
   const highlightedHTML = query ? highlight(renderedHTML, query) : renderedHTML;
 
-  return <div dangerouslySetInnerHTML={{ __html: highlightedHTML }}></div>;
+  return <div className="render" dangerouslySetInnerHTML={{ __html: highlightedHTML }}></div>;
 };
