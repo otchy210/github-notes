@@ -77,9 +77,7 @@ body {
       @include mq-max() {
         width: $max-col-width;
       }
-    }
-    &:last-child {
-      header {
+      &.icon-right-2cols {
         @include mq-2cols() {
           justify-content: flex-end;
         }
