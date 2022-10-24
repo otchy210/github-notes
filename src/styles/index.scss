@@ -282,6 +282,9 @@ article {
       &.menu-opened {
         margin-left: -$icon-width;
         transition: margin-left 0.2s;
+        a {
+          width: calc(100% - $space-4 - ($icon-width * 2));
+        }
         .menu {
           display: block;
           padding: $space-2;
