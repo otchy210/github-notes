@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDatabase } from '../../providers/DatabaseProvider';
 import { useGitHub } from '../../providers/GitHubProvider';
 import { useI18n } from '../../providers/I18nProvider';
@@ -33,9 +34,11 @@ export const List: React.FC = () => {
   const { client: git } = useGitHub();
   const { query } = useSearchQuery();
   const { t } = useI18n();
+  const navigate = useNavigate();
   const removeDraft = async (key: string) => {
     localStorage.removeDraft(key);
     setDrafts(localStorage.listDraft());
+    navigate('/');
   };
   const removeNote = async (key: string) => {
     if (!db || !git) {
@@ -47,6 +50,7 @@ export const List: React.FC = () => {
     db.remove(key);
     await git.pushDb(db.export());
     setNotes(sortedNotes(db));
+    navigate('/');
   };
   useEffect(() => {
     if (!db) {
