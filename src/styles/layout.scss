@@ -30,6 +30,7 @@ body {
 }
 
 .page {
+  overflow: hidden;
   position: absolute;
   display: flex;
   width: 100vw;
@@ -48,6 +49,12 @@ body {
     display: none;
     background-color: $background-color;
     box-shadow: -1px 0 0 $border-color, 1px 0 0 $border-color;
+    &:first-child {
+      box-shadow: 1px 0 0 $border-color, inset 1px 0 0 $border-color;
+      header {
+        box-shadow: 1px 0 0 $border-color, inset 1px 0 0 $border-color;
+      }
+    }
     &.prio-1 {
       display: block;
     }

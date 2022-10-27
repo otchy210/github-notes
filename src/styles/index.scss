@@ -151,11 +151,12 @@ header {
 }
 
 nav {
-  position: fixed;
+  position: absolute;
   top: $header-size;
   width: calc(100vw - 16px);
   max-width: 300px;
   height: calc(100vh - $header-size);
+  border-left: $border;
   border-right: $border;
   background-color: $background-color;
   box-shadow: 4px 16px 16px $ht-black;
