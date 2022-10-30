@@ -185,11 +185,20 @@ article {
   overflow: auto;
   z-index: 1;
   .new-note {
-    position: absolute;
-    right: $space-4;
+    position: fixed;
+    margin-left: calc(100vw - $new-note-icon-size - $space-4 - $space-2);
+    @include mq-2cols() {
+      margin-left: calc(50vw - $new-note-icon-size - $space-4 - $space-2);
+    }
+    @include mq-3cols() {
+      margin-left: calc(33.3333vw - $new-note-icon-size - $space-4 - $space-2);
+    }
+    @include mq-max() {
+      margin-left: calc($max-col-width - $new-note-icon-size - $space-4 - $space-2);
+    }
     bottom: $space-4;
-    width: 48px;
-    height: 48px;
+    width: $new-note-icon-size;
+    height: $new-note-icon-size;
     overflow: hidden;
     border: $border;
     border-radius: 50%;
@@ -213,6 +222,7 @@ article {
     overflow: auto;
   }
   .list {
+    padding-bottom: calc($new-note-icon-size + $space-2);
     h2 {
       border-bottom: $border;
     }
